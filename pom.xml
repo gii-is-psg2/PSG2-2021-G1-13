@@ -25,13 +25,26 @@
       		<roles>
         		<role>developer</role>
       		</roles>
-      		<timezone>Spain/Madrid</timezone>
+      		<timezone>Europe/Madrid</timezone>
       		<properties>
         		<picUrl>https://i.imgur.com/NRVEGCP.jpg</picUrl>
       		</properties>
     	</developer>
+        <developer>
+            <id>eveyugyug</id>
+            <name>Evelyn Gisele Yugsi Yugsi</name>
+            <email>eveyugyug@alum.us.es</email>
+            <url></url>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>Europe/Madrid</timezone>
+            <properties>
+                <picUrl></picUrl>
+            </properties>
+        </developer>
   	</developers>
-	
+
     <properties>
 
         <!-- Generic properties -->
@@ -49,21 +62,6 @@
         <spring-format.version>0.0.19</spring-format.version>
 
     </properties>
-    <developers>
-        <developer>
-            <id>eveyugyug</id>
-            <name>Evelyn Gisele Yugsi Yugsi</name>
-            <email>eveyugyug@alum.us.es</email>
-            <url></url>
-            <roles>
-                <role>developer</role>
-            </roles>
-            <timezone>Europe/Berlin</timezone>
-            <properties>
-                <picUrl></picUrl>
-            </properties>
-        </developer>
-    </developers>
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
