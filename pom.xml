@@ -12,9 +12,47 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.2.4.RELEASE</version>
     </parent>
-    <name>PSG2-2021-G1-13 Petclinic</name>
+    <name>petclinic</name>
 
     <developers>
+	    <developer>
+	      <id>carvilgar1</id>
+	      <name>Carlos Jesus Villadiego Garcia</name>
+	      <email>carvilgar1@alum.us.es</email>
+	      <url>https://github.com/carvilgar1</url>
+	      <organization>PSG2-2021-G1-13</organization>
+	      <organizationUrl>https://github.com/gii-is-psg2/PSG2-2021-G1-13</organizationUrl>
+	      <roles>
+	        <role>developer</role>
+	      </roles>
+	      <timezone>Europe/Madrid</timezone>
+	    </developer>
+    	<developer>
+      		<id>dcaro</id>
+      		<name>Daniel Caro</name>
+      		<email>dancarolm@alum.us.es</email>
+      		<url>https://github.com/Daniel-Caro</url>
+      		<organization>G1-13</organization>
+      		<organizationUrl>https://github.com/gii-is-psg2/PSG2-2021-G1-13</organizationUrl>
+      		<roles>
+        		<role>developer</role>
+      		</roles>
+      		<timezone>Europe/Madrid</timezone>
+      		<properties>
+        		<picUrl>https://i.imgur.com/NRVEGCP.jpg</picUrl>
+      		</properties>
+    	</developer>
+        <developer>
+            <id>eveyugyug</id>
+            <name>Evelyn Gisele Yugsi Yugsi</name>
+            <email>eveyugyug@alum.us.es</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>Europe/Madrid</timezone>
+            <properties>
+            </properties>
+        </developer>
         <developer>
             <id>enriquebarba97</id>
             <name>Enrique Barba Roque</name>
@@ -27,7 +65,7 @@
             </roles>
             <timezone>Spain/Madrid</timezone>
         </developer>
-    </developers>
+  	</developers>
 
     <properties>
 
@@ -46,7 +84,6 @@
         <spring-format.version>0.0.19</spring-format.version>
 
     </properties>
-
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
