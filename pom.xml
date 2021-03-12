@@ -13,7 +13,14 @@
         <version>2.2.4.RELEASE</version>
     </parent>
     <name>petclinic</name>
-
+	
+	<developers>
+		<developer>
+			<id>alepiupin</id>
+			<name>Alejandro Piury Pinzón</name>
+			<email>alejandropiuryp@gmail.com</email>
+		</developer>
+	</developers>
     <properties>
 
         <!-- Generic properties -->
