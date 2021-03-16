@@ -90,15 +90,15 @@ public class HotelReservationController {
 		return view;
 	}
 	
-	@GetMapping(value = "/{hotelReservationId}/edit")
+	@GetMapping(value = "/edit/{hotelReservationId}")
 	public String initUpdateCasTbForm(@PathVariable("hotelReservationId") final int hotelReservationId, final ModelMap model) {
 		HotelReservationController.log.info("Loading update hotel reservation form");
 		final HotelReservation hotelReservation = this.hotelReservationService.findHotelReservationById(hotelReservationId).get();	
 		model.put("hotelReservation", hotelReservation);
-		return "hotelteservations/updateHotelReservation";
+		return "hotelreservations/updateHotelReservation";
 	}
 
-	@PostMapping(value = "/{hotelReservationId}/edit")
+	@PostMapping(value = "/edit/{hotelReservationId}")
 	public String processUpdateCasTbForm(@Valid final HotelReservation hotelReservation, final BindingResult result,
 			@PathVariable("hotelReservationId") final int hotelReservationId, final ModelMap model) {
 		hotelReservation.setId(hotelReservationId);

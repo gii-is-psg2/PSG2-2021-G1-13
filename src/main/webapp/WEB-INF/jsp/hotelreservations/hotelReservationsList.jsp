@@ -40,7 +40,7 @@
                 </td>
             
             <td>
-                	<spring:url value="/hotelreservations/{hotelReservationId}/edit" var="editUrl">
+                	<spring:url value="/hotelreservations/edit/{hotelReservationId}" var="editUrl">
                         <spring:param name="hotelReservationId" value="${hotelReservation.id}"/>
                     </spring:url>
                     <a href="${fn:escapeXml(editUrl)}">Update</a>
