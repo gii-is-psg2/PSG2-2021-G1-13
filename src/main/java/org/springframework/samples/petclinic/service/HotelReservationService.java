@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.model.Authorities;
 import org.springframework.samples.petclinic.model.HotelReservation;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.repository.HotelReservationRepository;
@@ -49,5 +50,10 @@ public class HotelReservationService {
 	public Collection<Pet> findPets() {
 		// TODO Auto-generated method stub
 		return this.hotelReservationrepo.findPets();
+	}
+
+	public Authorities getAuthority(final String username) {
+		// TODO Auto-generated method stub
+		return this.hotelReservationrepo.getAuthority(username);
 	}
 }

@@ -1,14 +1,20 @@
 package org.springframework.samples.petclinic.web;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.model.Authorities;
 import org.springframework.samples.petclinic.model.HotelReservation;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.service.HotelReservationService;
+import org.springframework.samples.petclinic.util.UserUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -40,9 +46,19 @@ public class HotelReservationController {
 	
 	@GetMapping()
 	public String hotelReservationsList(final ModelMap modelMap) {
+		final String username = UserUtils.getUser();
+		final Authorities authority = this.hotelReservationService.getAuthority(username);
 		HotelReservationController.log.info("Loading list of hotel reservations view");
 		final String view= "hotelreservations/hotelReservationsList";
-		final Iterable<HotelReservation> hotelReservations=this.hotelReservationService.findAll();
+		List<HotelReservation> hotelReservations= new ArrayList<HotelReservation>();
+		if(authority.getAuthority().equals("owner")) {
+			final List<HotelReservation> allReservations=StreamSupport.stream(this.hotelReservationService.findAll().spliterator(), false).collect(Collectors.toList());
+			for(final HotelReservation res: allReservations) {
+				if(res.getPet().getOwner().getUser().getUsername().equals(username)) hotelReservations.add(res);
+			}
+		}else {
+			hotelReservations=StreamSupport.stream(this.hotelReservationService.findAll().spliterator(), false).collect(Collectors.toList());
+		}
 		modelMap.addAttribute("hotelreservations", hotelReservations);
 		return view;
 	}
@@ -117,7 +133,18 @@ public class HotelReservationController {
 	
 	@ModelAttribute("pets")
 	public Collection<Pet> populatePets() {
-		return this.hotelReservationService.findPets();
+		final String username = UserUtils.getUser();
+		final Authorities authority = this.hotelReservationService.getAuthority(username);
+		if(authority.getAuthority().equals("owner")) {
+			final Collection<Pet> allPets = this.hotelReservationService.findPets();
+			final List<Pet> validPets = new ArrayList<Pet>();
+			for(final Pet pet:allPets) {
+				if(pet.getOwner().getUser().getUsername().equals(username)) validPets.add(pet);
+			}
+			return validPets;
+		}else {
+			return this.hotelReservationService.findPets();
+		}
 	}
 	
 }
