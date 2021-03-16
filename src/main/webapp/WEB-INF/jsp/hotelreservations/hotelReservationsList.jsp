@@ -49,7 +49,10 @@
         </c:forEach>
         </tbody>
     </table>
-    
-	</div>
+    <div class="form-group">
+    		<form method="get" action="/hotelreservations/new">
+    			<button class="btn btn-default" type="submit">Add new reservation</button>
+			</form>
+		</div>
     
 </petclinic:layout>

@@ -1,9 +1,11 @@
 package org.springframework.samples.petclinic.service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.HotelReservation;
+import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.repository.HotelReservationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,5 +44,10 @@ public class HotelReservationService {
 
 	public  void delete(final HotelReservation hotelReservation) { 
 		this.hotelReservationrepo.delete(hotelReservation);
+	}
+
+	public Collection<Pet> findPets() {
+		// TODO Auto-generated method stub
+		return this.hotelReservationrepo.findPets();
 	}
 }

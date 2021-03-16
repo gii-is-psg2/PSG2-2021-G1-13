@@ -20,11 +20,11 @@ import lombok.Setter;
 public class HotelReservation extends BaseEntity{
 	
 	@NotNull
-	@DateTimeFormat(pattern= "yyyy-MM-dd")
+	@DateTimeFormat(pattern= "yyyy/MM/dd")
     private LocalDate finish;
 	
 	@NotNull
-	@DateTimeFormat(pattern= "yyyy-MM-dd")
+	@DateTimeFormat(pattern= "yyyy/MM/dd")
     private LocalDate start;
 	
 	@NotNull

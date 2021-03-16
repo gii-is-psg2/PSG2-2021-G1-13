@@ -24,15 +24,19 @@ public class HotelReservationValidator implements Validator {
 		final LocalDate start = hotelReservation.getStart();
 		final LocalDate finish = hotelReservation.getFinish();
 		final Pet pet = hotelReservation.getPet();
-		// name validation
+		// start validation
 		if (start == null) {
 			errors.rejectValue("start", HotelReservationValidator.REQUIRED, HotelReservationValidator.REQUIRED);
+		}else if(start.isBefore(LocalDate.now())) {
+			errors.rejectValue("start", "The reservation must be for the future", "The reservation must be for the future");
 		}
-		// dish_course validation
+		// finish validation
 		if (finish == null) {
 			errors.rejectValue("finish", HotelReservationValidator.REQUIRED, HotelReservationValidator.REQUIRED);
+		}else if(finish.isBefore(start)) {
+			errors.rejectValue("finish", "Finish date must be the same date or a date after the start", "Finish date must be the same date or a date after the start");
 		}
-		// shift validation
+		// pet validation
 		if (pet == null) {
 			errors.rejectValue("pet", HotelReservationValidator.REQUIRED, HotelReservationValidator.REQUIRED);
 		}		
