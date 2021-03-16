@@ -21,11 +21,11 @@ public class HotelReservation extends BaseEntity{
 	
 	@NotNull
 	@DateTimeFormat(pattern= "yyyy-MM-dd")
-    private LocalDate start;
+    private LocalDate finish;
 	
 	@NotNull
 	@DateTimeFormat(pattern= "yyyy-MM-dd")
-    private LocalDate finish;
+    private LocalDate start;
 	
 	@NotNull
 	@ManyToOne

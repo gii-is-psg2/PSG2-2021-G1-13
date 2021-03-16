@@ -38,9 +38,9 @@ public class HotelReservationController {
 	@GetMapping()
 	public String hotelReservationsList(final ModelMap modelMap) {
 		HotelReservationController.log.info("Loading list of hotel reservations view");
-		final String view= "hotelreservations/hotelreservationsList";
+		final String view= "hotelreservations/hotelReservationsList";
 		final Iterable<HotelReservation> hotelReservations=this.hotelReservationService.findAll();
-		modelMap.addAttribute("hotelReservations", hotelReservations);
+		modelMap.addAttribute("hotelreservations", hotelReservations);
 		return view;
 	}
 	
