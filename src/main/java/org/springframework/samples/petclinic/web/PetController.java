@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.BeanUtils;
@@ -122,6 +123,7 @@ public class PetController {
 		return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
 	}
 
+	
     /**
      *
      * @param pet
@@ -132,7 +134,7 @@ public class PetController {
      * @param model
      * @return
      */
-        @PostMapping(value = "/pets/{petId}/edit")
+    @PostMapping(value = "/pets/{petId}/edit")
 	public String processUpdateForm(@Valid Pet pet, BindingResult result, Owner owner,@PathVariable("petId") int petId, ModelMap model) {
 		if (result.hasErrors()) {
 			model.put("pet", pet);
@@ -149,6 +151,20 @@ public class PetController {
                     }
 			return "redirect:/owners/{ownerId}";
 		}
+	}
+        
+    @GetMapping(value = "/pets/{petId}/delete")
+    public String deletePet(@PathVariable("petId") int petId) {
+    	Pet pet = this.petService.findPetById(petId);
+    	pet.deleteOwner();
+    	this.petService.deletePet(petId);
+    	return "redirect:/owners/{ownerId}";
+    }
+    
+	@GetMapping(value = "/pets/{petId}/{visitId}/delete")
+	public String deleteVisit(@PathVariable("visitId") int visitId,@PathVariable("petId") int petId) {
+		this.petService.deleteVisit(visitId,petId);
+		return "redirect:/owners/{ownerId}";
 	}
 
 }
