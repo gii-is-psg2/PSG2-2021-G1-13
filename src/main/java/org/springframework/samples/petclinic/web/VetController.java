@@ -16,12 +16,20 @@
 package org.springframework.samples.petclinic.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Specialty;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Vets;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.Valid;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -34,8 +42,9 @@ import java.util.Map;
 public class VetController {
 
 	private final VetService vetService;
+    private static final String VIEWS_VET_CREATE_OR_UPDATE_FORM = "vets/createOrUpdateVetForm";
 
-	@Autowired
+    @Autowired
 	public VetController(VetService clinicService) {
 		this.vetService = clinicService;
 	}
@@ -61,4 +70,28 @@ public class VetController {
 		return vets;
 	}
 
+    @ModelAttribute("specialties")
+    public Collection<Specialty> populatePetTypes() {
+        return this.vetService.findSpecialties();
+    }
+
+    @GetMapping(value = "/vets/new")
+    public String initCreationForm(Map<String, Object> model) {
+        Vet vet = new Vet();
+        model.put("vet", vet);
+        return VIEWS_VET_CREATE_OR_UPDATE_FORM;
+    }
+
+    @PostMapping(value = "/vets/new")
+    public String processCreationForm(@Valid Vet vet, BindingResult result) {
+        if (result.hasErrors()) {
+            return VIEWS_VET_CREATE_OR_UPDATE_FORM;
+        }
+        else {
+            //creating vet
+            this.vetService.saveVet(vet);
+
+            return "redirect:/vets";
+        }
+    }
 }
