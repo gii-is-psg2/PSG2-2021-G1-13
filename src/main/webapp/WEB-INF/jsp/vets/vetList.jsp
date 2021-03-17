@@ -5,13 +5,13 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="vets">
-    <h2>Veterinarians</h2>
+    <h2><fmt:message key="veterinarians"/></h2>
 
     <table id="vetsTable" class="table table-striped">
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Specialties</th>
+            <th><fmt:message key="firstName"/></th>
+            <th><fmt:message key="specialties"/></th>
         </tr>
         </thead>
         <tbody>
@@ -22,9 +22,10 @@
                 </td>
                 <td>
                     <c:forEach var="specialty" items="${vet.specialties}">
-                        <c:out value="${specialty.name} "/>
+                    	<fmt:message key="${specialty.name}"/>
+                    	<c:out value=" "></c:out>
                     </c:forEach>
-                    <c:if test="${vet.nrOfSpecialties == 0}">none</c:if>
+                    <c:if test="${vet.nrOfSpecialties == 0}"><fmt:message key="none"/></c:if>
                 </td>
             </tr>
         </c:forEach>
