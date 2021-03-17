@@ -4,7 +4,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <!--  >%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%-->
@@ -18,7 +17,7 @@
                id="search-owner-form">
         <div class="form-group">
             <div class="control-group" id="lastName">
-                <label class="col-sm-2 control-label"><fmt:message key="lastName"/> </label>
+                <label class="col-sm-2 control-label"><fmt:message key="lastName"/></label>
                 <div class="col-sm-10">
                     <form:input class="form-control" path="lastName" size="30" maxlength="80"/>
                     <span class="help-inline"><form:errors path="*"/></span>
@@ -27,7 +26,7 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default"><fmt:message key="find"/></button>
+                <button type="submit" class="btn btn-default"><fmt:message key="findOwner"/></button>
             </div>
         </div>
 
@@ -35,7 +34,7 @@
 
     <br/> 
     <sec:authorize access="hasAuthority('admin')">
-		<a class="btn btn-default" href='<spring:url value="/owners/new" htmlEscape="true"/>'><fmt:message key="add"/></a>
+		<a class="btn btn-default" href='<spring:url value="/owners/new" htmlEscape="true"/>'><fmt:message key="addOwner"/></a>
 	</sec:authorize>
 	
 </petclinic:layout>
