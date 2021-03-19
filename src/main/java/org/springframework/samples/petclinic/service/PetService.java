@@ -61,6 +61,19 @@ public class PetService {
 	}
 
 	@Transactional(readOnly = true)
+	public Visit findVisitById(int id) throws DataAccessException {
+		return this.visitRepository.findById(id);
+	}
+	
+	@Transactional
+	public void deleteVisit(int id,int idPet) throws DataAccessException {
+		Visit visit = this.findVisitById(id);
+		Pet pet = this.findPetById(idPet);
+		pet.removeVisit(visit);
+		this.visitRepository.deleteById(id);
+	}
+	
+	@Transactional(readOnly = true)
 	public Pet findPetById(int id) throws DataAccessException {
 		return petRepository.findById(id);
 	}
@@ -77,6 +90,11 @@ public class PetService {
 
 	public Collection<Visit> findVisitsByPetId(int petId) {
 		return visitRepository.findByPetId(petId);
+	}
+
+	@Transactional
+	public void deletePet(int id) throws DataAccessException {
+		petRepository.deleteById(id);
 	}
 
 }
