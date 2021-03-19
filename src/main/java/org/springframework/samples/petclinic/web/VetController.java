@@ -23,10 +23,8 @@ import org.springframework.samples.petclinic.model.Vets;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -73,6 +71,11 @@ public class VetController {
     @ModelAttribute("specialties")
     public Collection<Specialty> populatePetTypes() {
         return this.vetService.findSpecialties();
+    }
+
+    @InitBinder("vet")
+    public void initVetBinder(WebDataBinder dataBinder) {
+        dataBinder.addCustomFormatter(new SpecialtyFormatter(vetService),Specialty.class);
     }
 
     @GetMapping(value = "/vets/new")
