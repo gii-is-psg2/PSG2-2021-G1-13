@@ -19,8 +19,9 @@
 @spring-grey:       #838789;
 @spring-light-grey: #f1f1f1;
 @spring-red:        #f44336;
+@spring-light-brown: #EED090;
 
-@body-bg:                           @spring-light-grey;
+@body-bg:                           @spring-light-brown;
 @text-color:                        @spring-brown;
 @link-color:                        @spring-dark-green;
 @link-hover-color:                  @spring-dark-green;
@@ -53,6 +54,10 @@
 .table > thead > tr > th {
   background-color: lighten(@spring-light-grey, 3%);
   color: @spring-brown;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #ECD9B2;
 }
 
 .table-filter {

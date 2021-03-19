@@ -24,6 +24,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.text.ParseException;
@@ -65,6 +68,12 @@ public class VetController {
 		Vets vets = new Vets();
 		vets.getVetList().addAll(this.vetService.findVets());
 		return vets;
+	}
+	
+	@GetMapping(value = "/vets/{id}/delete")
+	public String deleteVet(Map<String, Object> model,@PathVariable("id") int id) {
+		this.vetService.deleteVet(id);
+		return "redirect:/vets";
 	}
 
     @ModelAttribute("specialties")

@@ -49,8 +49,12 @@ public interface VetRepository extends Repository<Vet, Integer>{
 	 */
 	Collection<Vet> findAll() throws DataAccessException;
 
-    @Query("SELECT spec FROM Specialty spec ORDER BY spec.name")
-    List<Specialty> findSpecialties() throws DataAccessException;
 
-    Vet findById(int id) throws DataAccessException;
+    @Query("SELECT spec FROM Specialty spec ORDER BY spec.name")
+  List<Specialty> findSpecialties() throws DataAccessException;
+
+  Vet findById(int id) throws DataAccessException;
+
+	void deleteById(int id);
+
 }

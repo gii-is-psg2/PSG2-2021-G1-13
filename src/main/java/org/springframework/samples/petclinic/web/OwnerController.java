@@ -22,6 +22,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.AuthoritiesService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.VetService;
@@ -115,7 +116,7 @@ public class OwnerController {
 		model.addAttribute(owner);
 		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 	}
-
+	
 	@PostMapping(value = "/owners/{ownerId}/edit")
 	public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result,
 			@PathVariable("ownerId") int ownerId) {
@@ -127,6 +128,12 @@ public class OwnerController {
 			this.ownerService.saveOwner(owner);
 			return "redirect:/owners/{ownerId}";
 		}
+	}
+	
+	@GetMapping(value = "/owners/{ownerId}/delete")
+	public String deleteOwner(@PathVariable("ownerId") int ownerId) {
+		this.ownerService.deleteOwner(ownerId);
+		return "redirect:/owners";
 	}
 
 	/**
