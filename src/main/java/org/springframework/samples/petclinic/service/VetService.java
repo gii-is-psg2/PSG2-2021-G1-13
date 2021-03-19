@@ -60,4 +60,9 @@ public class VetService {
     public Collection<Specialty> findSpecialties() throws DataAccessException {
         return vetRepository.findSpecialties();
     }
+
+    @Transactional(readOnly = true)
+    public Vet findVetById(int id) throws DataAccessException {
+        return vetRepository.findById(id);
+    }
 }
