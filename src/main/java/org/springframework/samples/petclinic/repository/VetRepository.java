@@ -16,10 +16,12 @@
 package org.springframework.samples.petclinic.repository;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
-import org.springframework.samples.petclinic.model.Vet;
+import org.springframework.samples.petclinic.model.*;
 
 /**
  * Repository class for <code>Vet</code> domain objects All method names are compliant
@@ -34,10 +36,25 @@ import org.springframework.samples.petclinic.model.Vet;
  */
 public interface VetRepository extends Repository<Vet, Integer>{
 
+    /**
+     * Save an <code>Vet</code> to the data store, either inserting or updating it.
+     * @param vet the <code>Vet</code> to save
+     * @see BaseEntity#isNew
+     */
+    void save(Vet vet) throws DataAccessException;
+
 	/**
 	 * Retrieve all <code>Vet</code>s from the data store.
 	 * @return a <code>Collection</code> of <code>Vet</code>s
 	 */
 	Collection<Vet> findAll() throws DataAccessException;
+
+
+    @Query("SELECT spec FROM Specialty spec ORDER BY spec.name")
+  List<Specialty> findSpecialties() throws DataAccessException;
+
+  Vet findById(int id) throws DataAccessException;
+
+	void deleteById(int id);
 
 }
