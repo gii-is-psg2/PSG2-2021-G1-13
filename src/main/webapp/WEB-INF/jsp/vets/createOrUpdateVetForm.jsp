@@ -8,24 +8,27 @@
 
 <petclinic:layout pageName="vets">
     <h2>
-        <c:if test="${vet['new']}">New </c:if> Vet
+        <c:if test="${vet['new']}"><fmt:message key="newo"/> </c:if> <fmt:message key="vet"/>
     </h2>
     <form:form modelAttribute="vet" class="form-horizontal" id="add-vet-form">
         <div class="form-group has-feedback">
-            <petclinic:inputField label="First Name" name="firstName"/>
-            <petclinic:inputField label="Last Name" name="lastName"/>
+            <fmt:message key="firstName" var="firstname"/>
+            <fmt:message key="lastName" var="lastname"/>
+            <petclinic:inputField label="${firstname}" name="firstName"/>
+            <petclinic:inputField label="${lastname}" name="lastName"/>
             <div class="control-group">
-                <petclinic:selectField name="specialties" label="Specialties" names="${specialties}" size="5"/>
+                <fmt:message key="specialties" var="specs"/>
+                <petclinic:selectField name="specialties" label="${specs}" names="${specialties}" size="5"/>
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <c:choose>
                     <c:when test="${vet['new']}">
-                        <button class="btn btn-default" type="submit">Add Vet</button>
+                        <button class="btn btn-default" type="submit"><fmt:message key="addVet"/></button>
                     </c:when>
                     <c:otherwise>
-                        <button class="btn btn-default" type="submit">Update Vet</button>
+                        <button class="btn btn-default" type="submit"><fmt:message key="updateVet"/></button>
                     </c:otherwise>
                 </c:choose>
             </div>

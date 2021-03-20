@@ -2,7 +2,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
@@ -34,12 +33,12 @@
                     <spring:url value="/vets/{id}/edit" var="editUrl">
                         <spring:param name="id" value="${vet.id}"/>
                     </spring:url>
-                    <a href="${fn:escapeXml(editUrl)}">Edit Vet</a>
+                    <a href="${fn:escapeXml(editUrl)}"><fmt:message key="editVet"/></a>
 
                     <spring:url value="/vets/{id}/delete" var="editUrl">
        					<spring:param name="id" value="${vet.id}"/>
     				</spring:url>
-    				<a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Delete Vet</a>
+    				<a href="${fn:escapeXml(editUrl)}" class="btn btn-default"><fmt:message key="deleteVet"/></a>
 
                 </td>
             </tr>
@@ -50,11 +49,11 @@
     <table class="table-buttons">
         <tr>
             <td>
-                <a href="<spring:url value="/vets.xml" htmlEscape="true" />">View as XML</a>
+                <a href="<spring:url value="/vets.xml" htmlEscape="true" />"><fmt:message key="xml"/></a>
             </td>            
         </tr>
     </table>
     <sec:authorize access="hasAuthority('admin')">
-        <a class="btn btn-default" href='<spring:url value="/vets/new" htmlEscape="true"/>'>Add Vet</a>
+        <a class="btn btn-default" href='<spring:url value="/vets/new" htmlEscape="true"/>'><fmt:message key="addVet"/></a>
     </sec:authorize>
 </petclinic:layout>
