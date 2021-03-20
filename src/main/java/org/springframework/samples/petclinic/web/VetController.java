@@ -15,15 +15,22 @@
  */
 package org.springframework.samples.petclinic.web;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.petclinic.model.Vets;
+import org.springframework.samples.petclinic.model.*;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Map;
+import javax.validation.Valid;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * @author Juergen Hoeller
@@ -35,8 +42,9 @@ import java.util.Map;
 public class VetController {
 
 	private final VetService vetService;
+    private static final String VIEWS_VET_CREATE_OR_UPDATE_FORM = "vets/createOrUpdateVetForm";
 
-	@Autowired
+    @Autowired
 	public VetController(VetService clinicService) {
 		this.vetService = clinicService;
 	}
@@ -67,5 +75,92 @@ public class VetController {
 		this.vetService.deleteVet(id);
 		return "redirect:/vets";
 	}
+
+    @ModelAttribute("specialties")
+    public Collection<Specialty> populatePetTypes() {
+        return this.vetService.findSpecialties();
+    }
+
+    @InitBinder("vet")
+    public void initVetBinder(WebDataBinder dataBinder) {
+        dataBinder.addCustomFormatter(new SpecialtyFormatter(vetService),Specialty.class);
+    }
+
+    @GetMapping(value = "/vets/new")
+    public String initCreationForm(Map<String, Object> model) {
+        Vet vet = new Vet();
+        model.put("vet", vet);
+        return VIEWS_VET_CREATE_OR_UPDATE_FORM;
+    }
+
+    @PostMapping(value = "/vets/new")
+    public String processCreationForm(@Valid Vet vet, @RequestParam Optional<String[]> specialties, BindingResult result) {
+        if (result.hasErrors()) {
+            return VIEWS_VET_CREATE_OR_UPDATE_FORM;
+        }
+        else {
+            //creating vet
+            if (specialties.isPresent()) {
+                String[] spec_list = specialties.get();
+                for (int i = 0; i < spec_list.length; i++) {
+                    String specName = spec_list[i];
+                    try {
+                        vet.addSpecialty(parseSpec(specName));
+                    } catch (ParseException e) {
+
+                    }
+                }
+            }
+            this.vetService.saveVet(vet);
+
+            return "redirect:/vets";
+        }
+    }
+
+    private Specialty parseSpec(String text) throws ParseException {
+        Collection<Specialty> findSpecialties = this.vetService.findSpecialties();
+        for (Specialty specialty : findSpecialties) {
+            if (specialty.getName().equals(text)) {
+                return specialty;
+            }
+        }
+        throw new ParseException("type not found: " + text, 0);
+    }
+
+    @GetMapping(value = "/vets/{vetId}/edit")
+    public String initUpdateForm(@PathVariable("vetId") int vetId, ModelMap model) {
+        Vet vet = this.vetService.findVetById(vetId);
+        model.put("vet", vet);
+        return VIEWS_VET_CREATE_OR_UPDATE_FORM;
+    }
+
+    @PostMapping(value = "/vets/{vetId}/edit")
+    public String processCreationForm(@Valid Vet vet, @PathVariable int vetId, @RequestParam Optional<String[]> specialties, BindingResult result) {
+        if (result.hasErrors()) {
+            return VIEWS_VET_CREATE_OR_UPDATE_FORM;
+        }
+
+        else {
+            //creating vet
+            Set<Specialty> specialtySet = new HashSet<>();
+            if (specialties.isPresent()) {
+                String[] spec_list = specialties.get();
+                for (int i = 0; i < spec_list.length; i++) {
+                    String specName = spec_list[i];
+                    try {
+                        specialtySet.add(parseSpec(specName));
+                    } catch (ParseException e) {
+
+                    }
+                }
+            }
+            Vet vetToUpdate = vetService.findVetById(vetId);
+            BeanUtils.copyProperties(vet,vetToUpdate,"id");
+            vetToUpdate.setSpecialtiesInternal(specialtySet);
+            this.vetService.saveVet(vetToUpdate);
+
+            return "redirect:/vets";
+        }
+    }
 
 }

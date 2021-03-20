@@ -56,7 +56,7 @@ public class Vet extends Person {
 		return this.specialties;
 	}
 
-	protected void setSpecialtiesInternal(Set<Specialty> specialties) {
+	public void setSpecialtiesInternal(Set<Specialty> specialties) {
 		this.specialties = specialties;
 	}
 
