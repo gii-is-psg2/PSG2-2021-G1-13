@@ -14,6 +14,7 @@
         <tr>
             <th>Name</th>
             <th>Specialties</th>
+            <th>Actions</th>
             <th></th>
         </tr>
         </thead>
@@ -31,17 +32,20 @@
                 </td>
                 <td>
 
-                    <spring:url value="/vets/{id}/edit" var="editUrl">
-                        <spring:param name="id" value="${vet.id}"/>
-                    </spring:url>
-                    <a href="${fn:escapeXml(editUrl)}">Edit Vet</a>
-
                     <spring:url value="/vets/{id}/delete" var="editUrl">
        					<spring:param name="id" value="${vet.id}"/>
     				</spring:url>
-    				<a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Delete Vet</a>
+    				<a href="${fn:escapeXml(editUrl)}">Delete Vet</a>
 
                 </td>
+                <td>
+                
+                	<spring:url value="/vets/{id}/edit" var="editUrl">
+                        <spring:param name="id" value="${vet.id}"/>
+                    </spring:url>
+                    <a href="${fn:escapeXml(editUrl)}">Edit Vet</a>
+                    
+    			</td>
             </tr>
         </c:forEach>
         </tbody>
