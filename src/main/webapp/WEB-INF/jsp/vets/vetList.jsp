@@ -13,6 +13,8 @@
         <tr>
             <th><fmt:message key="firstName"/></th>
             <th><fmt:message key="specialties"/></th>
+            <th><fmt:message key="actions"/></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -30,17 +32,20 @@
                 </td>
                 <td>
 
-                    <spring:url value="/vets/{id}/edit" var="editUrl">
-                        <spring:param name="id" value="${vet.id}"/>
-                    </spring:url>
-                    <a href="${fn:escapeXml(editUrl)}"><fmt:message key="editVet"/></a>
-
                     <spring:url value="/vets/{id}/delete" var="editUrl">
        					<spring:param name="id" value="${vet.id}"/>
     				</spring:url>
-    				<a href="${fn:escapeXml(editUrl)}" class="btn btn-default"><fmt:message key="deleteVet"/></a>
+    				<a href="${fn:escapeXml(editUrl)}"><fmt:message key="deleteVet"/></a>
 
                 </td>
+                <td>
+                
+                	<spring:url value="/vets/{id}/edit" var="editUrl">
+                        <spring:param name="id" value="${vet.id}"/>
+                    </spring:url>
+                    <a href="${fn:escapeXml(editUrl)}"><fmt:message key="editVet"/></a>
+                    
+    			</td>
             </tr>
         </c:forEach>
         </tbody>
