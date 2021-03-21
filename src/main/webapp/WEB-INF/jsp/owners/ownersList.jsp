@@ -11,11 +11,11 @@
     <table id="ownersTable" class="table table-striped">
         <thead>
         <tr>
-            <th style="width: 150px;">Name</th>
-            <th style="width: 200px;">Address</th>
-            <th>City</th>
-            <th style="width: 120px">Telephone</th>
-            <th>Pets</th>
+            <th style="width: 150px;"><fmt:message key="firstName"/></th>
+            <th style="width: 200px;"><fmt:message key="address"/></th>
+            <th><fmt:message key="city"/></th>
+            <th style="width: 120px"><fmt:message key="telephone"/></th>
+            <th><fmt:message key="pets"/></th>
         </tr>
         </thead>
         <tbody>

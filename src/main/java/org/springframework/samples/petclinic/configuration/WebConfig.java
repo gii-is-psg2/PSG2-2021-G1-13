@@ -1,12 +1,6 @@
 package org.springframework.samples.petclinic.configuration;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.web.SpecialtyFormatter;
