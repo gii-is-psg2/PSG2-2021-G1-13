@@ -11,9 +11,9 @@
     <table id="vetsTable" class="table table-striped">
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Specialties</th>
-            <th>Actions</th>
+            <th><fmt:message key="firstName"/></th>
+            <th><fmt:message key="specialties"/></th>
+            <th><fmt:message key="actions"/></th>
             <th></th>
         </tr>
         </thead>
@@ -35,7 +35,7 @@
                     <spring:url value="/vets/{id}/delete" var="editUrl">
        					<spring:param name="id" value="${vet.id}"/>
     				</spring:url>
-    				<a href="${fn:escapeXml(editUrl)}">Delete Vet</a>
+    				<a href="${fn:escapeXml(editUrl)}"><fmt:message key="deleteVet"/></a>
 
                 </td>
                 <td>
@@ -43,7 +43,7 @@
                 	<spring:url value="/vets/{id}/edit" var="editUrl">
                         <spring:param name="id" value="${vet.id}"/>
                     </spring:url>
-                    <a href="${fn:escapeXml(editUrl)}">Edit Vet</a>
+                    <a href="${fn:escapeXml(editUrl)}"><fmt:message key="editVet"/></a>
                     
     			</td>
             </tr>
