@@ -1,13 +1,9 @@
 package org.springframework.samples.petclinic.configuration;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.samples.petclinic.model.Specialty;
+import org.springframework.samples.petclinic.web.SpecialtyFormatter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -16,16 +12,20 @@ import org.springframework.web.servlet.view.JstlView;
 
 
 public class WebConfig implements WebMvcConfigurer {
-	
+
 	@Autowired
 	GenericIdToEntityConverter idToEntityConverter;
-	
+
+	@Autowired
+    SpecialtyFormatter specialtyFormatter;
+
     @Override
     public void addFormatters(FormatterRegistry registry) {
-    	
+
         registry.addConverter(idToEntityConverter);
+        registry.addFormatterForFieldType(Specialty.class, specialtyFormatter);
     }
-    
+
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
