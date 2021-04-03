@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,10 @@ public class HotelReservationService {
 	public Authorities getAuthority(final String username) {
 		// TODO Auto-generated method stub
 		return this.hotelReservationrepo.getAuthority(username);
+	}
+
+	public List<HotelReservation> findByPet(final Pet pet) {
+		// TODO Auto-generated method stub
+		return this.hotelReservationrepo.findByPet(pet);
 	}
 }

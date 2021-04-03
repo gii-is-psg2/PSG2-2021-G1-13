@@ -20,5 +20,7 @@ public interface HotelReservationRepository  extends CrudRepository<HotelReserva
 	@Query("SELECT  auth FROM Authorities auth WHERE auth.user.username LIKE :username")
 	public Authorities getAuthority(@Param("username")String username) throws DataAccessException;
 
+	@Query("SELECT reservation FROM HotelReservation reservation WHERE reservation.pet = :pet")
+	List<HotelReservation> findByPet(@Param("pet")Pet pet);
 
 }

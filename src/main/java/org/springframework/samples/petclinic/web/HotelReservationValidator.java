@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.web;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.HotelReservation;
@@ -17,6 +18,16 @@ public class HotelReservationValidator implements Validator {
 
 	@Autowired
 	private HotelReservationService hotelReservationService;	
+	
+	public Boolean concurrentDates(final HotelReservation reservation) {
+		final List<HotelReservation> reservations = this.hotelReservationService.findByPet(reservation.getPet());
+		final LocalDate start = reservation.getStart();
+		final LocalDate finish = reservation.getFinish();
+		for(final HotelReservation oldRes:reservations) {
+			if((finish.isBefore(oldRes.getFinish()) && finish.isAfter(oldRes.getStart())) || (start.isBefore(oldRes.getFinish()) && start.isAfter(oldRes.getStart()))) return true;
+		}
+		return false;
+	}
 	
 	@Override
 	public void validate(final Object obj, final Errors errors) {
@@ -39,7 +50,11 @@ public class HotelReservationValidator implements Validator {
 		// pet validation
 		if (pet == null) {
 			errors.rejectValue("pet", HotelReservationValidator.REQUIRED, HotelReservationValidator.REQUIRED);
-		}		
+		}
+		// other reservations validation
+		if(this.concurrentDates(hotelReservation)) {
+			errors.rejectValue("pet", "This pet already has a reservation for this date", "This pet already has a reservation for this date");
+		}
 	}
 
 	/**
