@@ -1,4 +1,4 @@
-# Niko Niko Calendar of team X
+# Niko Niko Calendar of team G1-13
 ## Introduction
 Some interesting links about what a Niko Niko calendar is and opinions about its use in software development:
 
@@ -34,7 +34,7 @@ In the retrospective meeting, the team has a discussion about those results.
 
 | Day           | Enrique    | Alejandro  | Daniel  | Evelyn     | Carlos     |
 | ------------- | ------------- | -------------  | -------------  | -------------  | -------------  |
-| Day 1         |       |                |                | 😃               |                |
+| Day 1         |   😃    |                |                | 😃               |                |
 | Day 2         |               |                |                |                |                |
 | Day 3         |               |              |                |                |                |
 | Day 4         |              |               |                |                |                |
