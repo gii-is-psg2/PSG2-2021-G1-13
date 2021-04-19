@@ -35,6 +35,6 @@ In the retrospective meeting, the team has a discussion about those results.
 | Day           | Enrique    | Alejandro  | Daniel  | Evelyn     | Carlos     |
 | ------------- | ------------- | -------------  | -------------  | -------------  | -------------  |
 | Day 1         |   😃    |         😃       |        😃       | 😃               | 😃               |
-| Day 2         |   😃            |                |                |                |                |
+| Day 2         |   😃            |                |     😃           |                |                |
 | Day 3         |               |              |                |                |                |
 | Day 4         |              |               |                |                |                |
