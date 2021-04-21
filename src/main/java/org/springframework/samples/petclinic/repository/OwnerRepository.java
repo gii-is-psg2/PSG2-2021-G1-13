@@ -61,5 +61,7 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
 	public Owner findById(@Param("id") int id);
 
 	void deleteById(int id);
-
+	
+	@Query("SELECT owner FROM Owner owner WHERE owner.user.username LIKE :username")
+	public Collection<Owner> findByUsername(@Param("username") String username);
 }
