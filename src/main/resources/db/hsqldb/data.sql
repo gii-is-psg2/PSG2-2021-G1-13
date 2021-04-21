@@ -70,3 +70,6 @@ INSERT INTO hotelreservations(id,start,finish,pet_id) VALUES(3, '2021-03-18', '2
 INSERT INTO hotelreservations(id,start,finish,pet_id) VALUES(4, '2021-03-19', '2021-03-22', 4);
 
 INSERT INTO causes(id,name,description,target,organization,closed) VALUES (1,'Refugio','Para el refugio local',5000,'Refugio',FALSE);
+
+
+INSERT INTO donations VALUES (1, 200, '2021-04-15', 1)

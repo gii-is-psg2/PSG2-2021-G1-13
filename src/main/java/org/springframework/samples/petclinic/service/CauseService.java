@@ -50,4 +50,12 @@ public class CauseService {
     public void deleteDonationById(final int id) throws DataAccessException{
         this.donationRepository.deleteById(id);
     }
+    
+    public List<Donation> findAllDonations(){
+    	return this.donationRepository.findAll();
+    }
+    
+    public List<Donation> findDonationsByCause(final int id) {
+		return this.donationRepository.findDonationsByCauseId(id);
+	}
 }

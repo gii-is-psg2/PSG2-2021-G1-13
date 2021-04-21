@@ -1,9 +1,13 @@
 package org.springframework.samples.petclinic.web;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Cause;
+import org.springframework.samples.petclinic.model.Donation;
 import org.springframework.samples.petclinic.service.CauseService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/causes")
 public class CauseController {
 	
+	private static final String CREATE_DONATION_VIEW = "donations/createDonationForm";
+
 	@Autowired
 	private CauseService causeService;
 	
@@ -106,6 +112,36 @@ public class CauseController {
 		else {
 			CauseController.log.info("Cause validated: updating into DB");
 			this.causeService.saveCause(cause);
+			return "redirect:/causes";
+		}
+	}
+	
+	@GetMapping("/{causeId}")
+	public String causeDetails(@PathVariable("causeId") final int causeId, final ModelMap modelmap) {
+		final String view = "causes/datails";
+		final List<Donation> donations = this.causeService.findDonationsByCause(causeId);
+		modelmap.addAttribute("donations", donations);
+		modelmap.addAttribute("cause", this.causeService.findCauseById(causeId));
+		return view;		
+	}
+	
+	@GetMapping("/{causeId}/donate")
+	public String initCreationDonationForm(@PathVariable("causeId") final int causeId, final ModelMap modelmap) {
+		final Donation donation = new Donation();
+		modelmap.addAttribute("donation", donation);
+		modelmap.addAttribute("causeId", causeId);
+		return CauseController.CREATE_DONATION_VIEW;
+		
+	}
+	
+	@PostMapping("/{causeId}/donate")
+	public String processCreateDonationForm(@Valid final Donation donation, final BindingResult result, @PathVariable("causeId") final int causeId, final ModelMap modelmap){
+		if(result.hasErrors()) {
+			modelmap.addAttribute("donation", donation);
+			return CauseController.CREATE_DONATION_VIEW;
+		}else {
+			donation.setDate(LocalDate.now());
+			this.causeService.saveDonation(donation);
 			return "redirect:/causes";
 		}
 	}
