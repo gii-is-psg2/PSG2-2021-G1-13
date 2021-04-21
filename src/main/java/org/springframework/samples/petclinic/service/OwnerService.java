@@ -83,4 +83,9 @@ public class OwnerService {
 		owner.setUser(null);
 		ownerRepository.deleteById(id);
 	}
+	
+	@Transactional(readOnly = true)
+	public Collection<Owner> findOwnersByUsername(String username) throws DataAccessException {
+		return ownerRepository.findByUsername(username);
+	}
 }

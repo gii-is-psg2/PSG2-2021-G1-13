@@ -26,6 +26,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import java.time.LocalDate;
@@ -65,6 +66,9 @@ public class Pet extends NamedEntity {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet")
 	private Set<HotelReservation> reservations;
+	
+	@OneToOne(mappedBy = "pet",cascade=CascadeType.ALL)
+	private Adoption adoption;
 
 	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
@@ -119,5 +123,21 @@ public class Pet extends NamedEntity {
 	public void removeVisit(Visit visit) {
 		visits.remove(visit);
 		visit.setPet(null);
+	}
+
+	public Adoption getAdoption() {
+		return adoption;
+	}
+
+	public void setAdoption(Adoption adoption) {
+		this.adoption = adoption;
+	}
+	
+	public void newOwner(Owner owner) {
+		this.getOwner().removePet(this);
+		this.deleteOwner();
+		
+		owner.addPet(this);
+		this.setOwner(owner);
 	}
 }

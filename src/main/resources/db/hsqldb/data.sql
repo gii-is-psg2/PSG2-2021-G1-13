@@ -56,7 +56,7 @@ INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (8, 'Max', '2012-09
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (9, 'Lucky', '2011-08-06', 5, 7);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (10, 'Mulligan', '2007-02-24', 2, 8);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (11, 'Freddy', '2010-03-09', 5, 9);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (12, 'Lucky', '2010-06-24', 2, 10);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (12, 'Paul', '2010-06-24', 2, 10);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (13, 'Sly', '2012-06-08', 1, 10);
 
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (1, 7, '2013-01-01', 'rabies shot');
@@ -68,3 +68,10 @@ INSERT INTO hotelreservations(id,start,finish,pet_id) VALUES(1, '2021-03-16', '2
 INSERT INTO hotelreservations(id,start,finish,pet_id) VALUES(2, '2021-03-17', '2021-03-20', 2);
 INSERT INTO hotelreservations(id,start,finish,pet_id) VALUES(3, '2021-03-18', '2021-03-21', 3);
 INSERT INTO hotelreservations(id,start,finish,pet_id) VALUES(4, '2021-03-19', '2021-03-22', 4);
+
+INSERT INTO adoptions(id,description,pet) VALUES (1,'Too many animals in household',1);
+INSERT INTO adoptions(id,description,pet) VALUES (2,'Allergies in family',6);
+INSERT INTO adoptions(id,description,pet) VALUES (3,'Incompatibility with other pets',2);
+INSERT INTO adoptions(id,description,pet) VALUES (4,'Owner having personal problems',3);
+
+INSERT INTO adoption_applications(id,description,approved,owner,adoption) VALUES (1,'Prueba',false,1,2);
