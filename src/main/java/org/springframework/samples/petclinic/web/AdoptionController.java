@@ -103,11 +103,10 @@ public class AdoptionController {
 	}
 	
 	
-	@GetMapping("/adoptions/{ownerId}/{adoptionId}")
-	public String adoptionsOwner(Map<String, Object> model,@PathVariable("ownerId") int ownerId,@PathVariable("adoptionId") int adoptionId) {
-		Adoption adoption = this.adoptionService.findById(adoptionId);
-		model.put("adoption", adoption);
-		model.put("ownerId", ownerId);
+	@GetMapping("/adoptions/details/{adoptionId}")
+	public String adoptionsDetails(Map<String, Object> model, @PathVariable("adoptionId") int adoptionId) {
+		Adoption adoption = adoptionService.findById(adoptionId);
+		model.put("pet", adoption.getPet());
 		return "adoptions/adoptionDetails";
 	}
 }

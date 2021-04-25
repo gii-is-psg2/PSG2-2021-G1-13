@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.web;
 
+import java.util.Collection;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -12,8 +13,11 @@ import org.springframework.samples.petclinic.service.AdoptionApplicationService;
 import org.springframework.samples.petclinic.service.AdoptionService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -41,21 +45,30 @@ public class AdoptionApplicationController {
 		Owner owner = this.ownerService.findOwnerById(ownerId);
 		Adoption adoption = this.adoptionService.findById(adoptionId);
 		adoptionApplication.setOwner(owner);
-		adoption.addAdoptionApplication(adoptionApplication);
+		adoptionApplication.setAdoption(adoption);
 		adoptionApplication.setApproved(false);
 		model.put("adoptionApplication", adoptionApplication);
 		return adoptionApplicationForm;
 	}
 	
-	@PostMapping(value="/adoptionApplication/new/{ownerId}/{adoptionId}")
-	public String processFormAdoptionApplication(@Valid AdoptionApplication adoptionApplication,@PathVariable("ownerId") int ownerId, @PathVariable("adoptionId") int adoptionId, Map<String, Object> model,BindingResult result) {
+	@PostMapping(value="/adoptionApplication/new")
+	public String processFormAdoptionApplication(@ModelAttribute("adoptionApplication") @Validated AdoptionApplication adoptionApplication, BindingResult result, ModelMap model) {
 		if(result.hasErrors()) {
+			model.put("adoptionApplication", adoptionApplication);
 			return adoptionApplicationForm;
 		}else {
 			this.adoptionApplicationService.saveAdoptionApplication(adoptionApplication);
-			return "";
+			return "redirect:/";
 		}
 	}
+	
+	@GetMapping(value="/adoptionApplication/{adoptionId}")
+	public String applicationsByAdoption(@PathVariable("adoptionId") int adoptionId, ModelMap model) {
+		Collection<AdoptionApplication> adoptionApplicationList = adoptionApplicationService.findApplicationsByAdoption(adoptionId);
+		model.addAttribute("adoptionApllicationDetails", adoptionApplicationList);
+		return adoptionApllicationDetails;
+	}
+	
 	
 	@GetMapping(value="/adoptionApplication/{ownerId}/{adoptionApplicationId}")
 	public String initAdoptionApplicationDetails(@PathVariable("ownerId") int ownerId, @PathVariable("adoptionApplicationId") int adoptionApllicationId, Map<String, Object> model) {
@@ -64,6 +77,14 @@ public class AdoptionApplicationController {
 		model.put("adoptionApplication", adoptionApplication);
 		return adoptionApllicationDetails;
 	}
+	
+	@GetMapping(value="/adoptionApplication/{adoptionId}/{adoptionApplicationId}/delete")
+	public String rejectAdoptionApplication(@PathVariable("adoptionId") int adoptionId, @PathVariable("adoptionApplicationId") int adoptionApllicationId, Map<String, Object> model) {
+		adoptionApplicationService.deleteById(adoptionApllicationId);
+		return "redirect:/adoptionApplication/"+adoptionId;
+	}
+	
+	
 	@PostMapping(value="/adoptionApplication/{ownerId}/{adoptionApplicationId}")
 	public String processAdoptionApplicationDetails(@Valid AdoptionApplication adoptionApplication,@PathVariable("ownerId") int ownerId, @PathVariable("adoptionApplicationId") int adoptionApllicationId, Map<String, Object> model, BindingResult result) {
 		if(result.hasErrors()) {

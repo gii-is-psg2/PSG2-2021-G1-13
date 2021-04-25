@@ -12,14 +12,8 @@
 
 	
     <h2><fmt:message key="newAdoptionApp"/></h2>
-
-	<spring:url value="/adoptionApplication/new/{ownerId}/{adoptionId}" var="adoptionApp">
-        <spring:param name="ownerId" value="${ownerId}"/>
-        <spring:param name="adoptionId" value="${adoptionApplication.adoption.id}"/>
-    </spring:url>
-
     
-    <form:form modelAttribute="adoptionApplication" action="${fn:escapeXml(adoptionApp)}" method="post" class="form-horizontal">
+    <form:form modelAttribute="adoptionApplication" action="/adoptionApplication/new" method="post" class="form-horizontal">
         
         <div class="form-group">            
               <div class="control-group" id="description">
@@ -30,6 +24,8 @@
                 </div>
             </div>
             <form:input class="form-control" path="approved" size="30" maxlength="80" type="hidden"/>
+            <form:input class="form-control" path="owner" size="30" maxlength="80" type="hidden"/>
+            <form:input class="form-control" path="adoption" size="30" maxlength="80" type="hidden"/>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">

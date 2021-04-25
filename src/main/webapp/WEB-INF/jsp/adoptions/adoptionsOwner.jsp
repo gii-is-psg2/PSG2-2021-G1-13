@@ -11,9 +11,10 @@
     <table id="adoptionTable" class="table table-striped">
         <thead>
         <tr>
-            <th style="width: 20%;"><fmt:message key="pet"/></th>
-            <th style="width: 60%;"><fmt:message key="description"/></th>
-            <th style="width: 20%;"></th>
+            <th style="width: 25%;"><fmt:message key="pet"/></th>
+            <th style="width: 25%;"><fmt:message key="description"/></th>
+            <th style="width: 25%;"></th>
+            <th style="width: 25%;"></th>
         </tr>
         </thead>
         <tbody>
@@ -25,6 +26,12 @@
                 <td> 
                    <c:out value="${adoption.description}"/> 
                 </td> 
+                <td>
+                	<spring:url value="/adoptionApplication/{adoptionId}" var="adoptionAppDetails">
+                        <spring:param name="adoptionId" value="${adoption.id}"/>
+                    </spring:url>
+                    <a href="${fn:escapeXml(adoptionAppDetails)}"><fmt:message key="adoptionAppDetails"/></a>
+                </td>
                  <td>
                 	<spring:url value="/adoptions/{adoptionId}/{ownerId}/delete" var="adoptionDelete">
                         <spring:param name="ownerId" value="${ownerId}"/>

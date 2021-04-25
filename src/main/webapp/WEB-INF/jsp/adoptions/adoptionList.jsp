@@ -18,13 +18,18 @@
         </thead>
         <tbody>
         <c:forEach items="${adoptions}" var="adoption">
-            <tr>
-                <td> 
-                    <c:out value="${adoption.pet.name}"/> 
-                </td>
-                <td> 
-                   <c:out value="${adoption.description}"/> 
-                </td> 
+	            <tr>
+	            	<td> 
+	            		<spring:url value="/adoptions/details/{adoptionId}" var="adoptionDetail">
+			                <spring:param name="adoptionId" value="${adoption.id}"/>
+			            </spring:url>
+			            <a href="${fn:escapeXml(adoptionDetail)}">
+			            	<c:out value="${adoption.pet.name}"/> 
+			            </a>
+	                </td>
+	                <td> 
+	                   <c:out value="${adoption.description}"/> 
+	                </td> 
                 <td>
                 	<spring:url value="/adoptionApplication/new/{ownerId}/{adoptionId}" var="adoptionApp">
                         <spring:param name="ownerId" value="${ownerId}"/>
