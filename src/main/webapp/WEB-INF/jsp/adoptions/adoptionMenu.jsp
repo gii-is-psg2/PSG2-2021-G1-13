@@ -10,17 +10,17 @@
     <h2><fmt:message key="adoptionMenu"/></h2>
     
     <spring:url value="/adoptions/{ownerId}/list" var="availableAdoptions">
-        <spring:param name="ownerId" value="${owner.id}"/>
+        <spring:param name="ownerId" value="${ownerId}"/>
     </spring:url>
     <a href="${fn:escapeXml(availableAdoptions)}"><fmt:message key="availableAdoptions"/></a>
     <br>
     <spring:url value="/adoptions/{ownerId}" var="ownAdoptions">
-        <spring:param name="ownerId" value="${owner.id}"/>
+        <spring:param name="ownerId" value="${ownerId}"/>
     </spring:url>
     <a href="${fn:escapeXml(ownAdoptions)}"><fmt:message key="ownAdoptions"/></a>
     <br>
     <spring:url value="/owners/{ownerId}/pets" var="ownPets">
-        <spring:param name="ownerId" value="${owner.id}"/>
+        <spring:param name="ownerId" value="${ownerId}"/>
     </spring:url>
     <a href="${fn:escapeXml(ownPets)}"><fmt:message key="ownPets"/></a>	
 </petclinic:layout>

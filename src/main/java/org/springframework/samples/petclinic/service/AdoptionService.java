@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.samples.petclinic.model.Adoption;
 import org.springframework.samples.petclinic.repository.AdoptionRepository;
 import org.springframework.stereotype.Service;
@@ -27,10 +28,14 @@ public class AdoptionService {
 	public void saveAdoption(Adoption adoption) throws DataAccessException {
 		adoptionRepository.save(adoption);
 	}
-	
+	@Modifying
 	@Transactional
 	public void deleteAdoption(int id) throws DataAccessException{
-		adoptionRepository.deleteById(id);
+		Adoption adoption = this.adoptionRepository.findById(id);
+		adoption.setPet(null);
+		adoption.setAdoptionApplications(null);
+		this.adoptionRepository.save(adoption);
+		this.adoptionRepository.deleteById(adoption.getId());
 	}
 	
 	@Transactional(readOnly = true)

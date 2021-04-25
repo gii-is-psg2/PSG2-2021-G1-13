@@ -62,42 +62,30 @@ public class AdoptionApplicationController {
 		}
 	}
 	
-	@GetMapping(value="/adoptionApplication/{adoptionId}")
-	public String applicationsByAdoption(@PathVariable("adoptionId") int adoptionId, ModelMap model) {
+	@GetMapping(value="/adoptionApplication/{adoptionId}/{ownerId}")
+	public String applicationsByAdoption(@PathVariable("adoptionId") int adoptionId,@PathVariable("ownerId") int ownerId, ModelMap model) {
 		Collection<AdoptionApplication> adoptionApplicationList = adoptionApplicationService.findApplicationsByAdoption(adoptionId);
 		model.addAttribute("adoptionApllicationDetails", adoptionApplicationList);
+		model.addAttribute("ownerId", ownerId);
 		return adoptionApllicationDetails;
 	}
 	
 	
-	@GetMapping(value="/adoptionApplication/{ownerId}/{adoptionApplicationId}")
-	public String initAdoptionApplicationDetails(@PathVariable("ownerId") int ownerId, @PathVariable("adoptionApplicationId") int adoptionApllicationId, Map<String, Object> model) {
+	@GetMapping(value="/adoptionApplication/{ownerId}/{adoptionApplicationId}/accept")
+	public String acceptAdoptionApplication(@PathVariable("ownerId") int ownerId, @PathVariable("adoptionApplicationId") int adoptionApllicationId, Map<String, Object> model) {
 		AdoptionApplication adoptionApplication = this.adoptionApplicationService.findById(adoptionApllicationId);
+		Adoption adoption = adoptionApplication.getAdoption();
+		adoption.getPet().newOwner(adoptionApplication.getOwner());
+		this.adoptionApplicationService.deleteById(adoptionApllicationId);
+		this.adoptionService.deleteAdoption(adoption.getId());
 		model.put("ownerId", ownerId);
-		model.put("adoptionApplication", adoptionApplication);
-		return adoptionApllicationDetails;
+		return "/adoptions/adoptionMenu";
 	}
 	
-	@GetMapping(value="/adoptionApplication/{adoptionId}/{adoptionApplicationId}/delete")
-	public String rejectAdoptionApplication(@PathVariable("adoptionId") int adoptionId, @PathVariable("adoptionApplicationId") int adoptionApllicationId, Map<String, Object> model) {
-		adoptionApplicationService.deleteById(adoptionApllicationId);
-		return "redirect:/adoptionApplication/"+adoptionId;
+	@GetMapping(value="/adoptionApplication/{ownerId}/{adoptionApplicationId}/reject")
+	public String rejectAdoptionApplication(@PathVariable("ownerId") int ownerId, @PathVariable("adoptionApplicationId") int adoptionApllicationId, Map<String, Object> model) {
+		this.adoptionApplicationService.deleteById(adoptionApllicationId);
+		model.put("ownerId", ownerId);
+		return "/adoptions/adoptionMenu";
 	}
-	
-	
-	@PostMapping(value="/adoptionApplication/{ownerId}/{adoptionApplicationId}")
-	public String processAdoptionApplicationDetails(@Valid AdoptionApplication adoptionApplication,@PathVariable("ownerId") int ownerId, @PathVariable("adoptionApplicationId") int adoptionApllicationId, Map<String, Object> model, BindingResult result) {
-		if(result.hasErrors()) {
-			return adoptionApllicationDetails;
-		}else {
-			if(adoptionApplication.getApproved()) {
-				adoptionApplication.getAdoption().getPet().newOwner(adoptionApplication.getOwner());
-				this.adoptionApplicationService.saveAdoptionApplication(adoptionApplication);
-			}else {
-				this.adoptionApplicationService.deleteById(adoptionApllicationId);
-			}
-			return "/adoption/" + ownerId;
-		}
-	}
-
 }

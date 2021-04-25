@@ -30,15 +30,15 @@
                    <c:out value="${adoptionApllication.approved}"/> 
                 </td> 
                  <td>
-                	<spring:url value="/adoptions/{adoptionId}/{ownerId}/delete" var="accept">
+                	<spring:url value="/adoptionApplication/{ownerId}/{adoptionApplicationId}/accept" var="accept">
                         <spring:param name="ownerId" value="${ownerId}"/>
-                        <spring:param name="adoptionId" value="${adoption.id}"/>
+                        <spring:param name="adoptionApplicationId" value="${adoptionApllication.id}"/>
                     </spring:url>
                     <a href="${fn:escapeXml(accept)}"><fmt:message key="accept"/></a>
                     
-                    <spring:url value="/adoptionApplication/{adoptionId}/{adoptionApplicationId}/delete" var="reject">
+                    <spring:url value="/adoptionApplication/{ownerId}/{adoptionApplicationId}/reject" var="reject">
+                    	<spring:param name="ownerId" value="${ownerId}"/>
                         <spring:param name="adoptionApplicationId" value="${adoptionApllication.id}"/>
-                        <spring:param name="adoptionId" value="${adoptionApllication.adoption.id}"/>
                     </spring:url>
                     <a href="${fn:escapeXml(reject)}"><fmt:message key="reject"/></a>
                     

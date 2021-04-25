@@ -56,7 +56,6 @@ public class AdoptionController {
 	public String adoptionsOwner(Map<String, Object> model,@PathVariable("ownerId") int ownerId) {
 		List<Adoption> adoptions = this.adoptionService.findByOwnerId(ownerId).stream().collect(Collectors.toList());
 		model.put("adoptions", adoptions);
-		model.put("ownerId", ownerId);
 		return "adoptions/adoptionsOwner";
 	}
 	
@@ -71,7 +70,7 @@ public class AdoptionController {
 	@GetMapping(value="/adoptions/menu")
 	public String adoptionMenu(@Valid @ModelAttribute("owner")Owner owner, BindingResult result
 			, Map<String, Object> model) {
-		model.put("owner", owner);
+		model.put("ownerId", owner.getId());
 		return "adoptions/adoptionMenu";
 	}
 	

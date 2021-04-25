@@ -27,8 +27,9 @@
                    <c:out value="${adoption.description}"/> 
                 </td> 
                 <td>
-                	<spring:url value="/adoptionApplication/{adoptionId}" var="adoptionAppDetails">
+                	<spring:url value="/adoptionApplication/{adoptionId}/{ownerId}" var="adoptionAppDetails">
                         <spring:param name="adoptionId" value="${adoption.id}"/>
+                        <spring:param name="ownerId" value="${ownerId}"/>
                     </spring:url>
                     <a href="${fn:escapeXml(adoptionAppDetails)}"><fmt:message key="adoptionAppDetails"/></a>
                 </td>

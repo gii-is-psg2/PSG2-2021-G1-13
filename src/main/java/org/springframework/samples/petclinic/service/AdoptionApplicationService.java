@@ -31,6 +31,10 @@ public class AdoptionApplicationService {
 	
 	@Transactional
 	public void deleteById(int id) {
+		AdoptionApplication adoptionApplication = this.adoptionApplicationRepository.findById(id);
+		adoptionApplication.setAdoption(null);
+		adoptionApplication.setOwner(null);
+		this.adoptionApplicationRepository.save(adoptionApplication);
 		this.adoptionApplicationRepository.deleteById(id);
 	}
 	
