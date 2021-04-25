@@ -27,6 +27,7 @@ import org.springframework.samples.petclinic.service.AuthoritiesService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.samples.petclinic.service.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -58,7 +59,8 @@ public class OwnerController {
 	}
 
 	@GetMapping(value = "/owners/new")
-	public String initCreationForm(Map<String, Object> model) {
+	public String initCreationForm(Map<String, Object> model, Authentication authentication) {
+	    String name = authentication.getName();
 		Owner owner = new Owner();
 		model.put("owner", owner);
 		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
@@ -72,7 +74,7 @@ public class OwnerController {
 		else {
 			//creating owner, user and authorities
 			this.ownerService.saveOwner(owner);
-			
+
 			return "redirect:/owners/" + owner.getId();
 		}
 	}
@@ -116,7 +118,7 @@ public class OwnerController {
 		model.addAttribute(owner);
 		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 	}
-	
+
 	@PostMapping(value = "/owners/{ownerId}/edit")
 	public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result,
 			@PathVariable("ownerId") int ownerId) {
@@ -129,7 +131,7 @@ public class OwnerController {
 			return "redirect:/owners/{ownerId}";
 		}
 	}
-	
+
 	@GetMapping(value = "/owners/{ownerId}/delete")
 	public String deleteOwner(@PathVariable("ownerId") int ownerId) {
 		this.ownerService.deleteOwner(ownerId);
