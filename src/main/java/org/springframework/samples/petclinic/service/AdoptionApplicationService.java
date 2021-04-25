@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.service;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.AdoptionApplication;
@@ -30,5 +32,10 @@ public class AdoptionApplicationService {
 	@Transactional
 	public void deleteById(int id) {
 		this.adoptionApplicationRepository.deleteById(id);
+	}
+	
+	@Transactional(readOnly = true)
+	public Collection<AdoptionApplication> findApplicationsByAdoption(int id) throws DataAccessException{
+		return this.adoptionApplicationRepository.findApplicationsByAdoption(id);
 	}
 }
