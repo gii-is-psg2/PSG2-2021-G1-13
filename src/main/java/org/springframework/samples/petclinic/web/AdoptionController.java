@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.web;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,14 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Adoption;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.SelectOwnerForm;
 import org.springframework.samples.petclinic.service.AdoptionService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
+import org.springframework.samples.petclinic.util.UserUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -39,24 +44,49 @@ public class AdoptionController {
 		this.ownerService = ownerService;
 	}
 	
-	@GetMapping(value="/adoptions/{ownerId}/list")
-	public String adoptionList( Map<String, Object> model, @PathVariable("ownerId") int ownerId) {
+	@GetMapping("/adoptions")
+	public String selectOwner(ModelMap model) {
+		Collection<Owner> results = this.ownerService.findOwnerByLastName("");
+		model.put("ownerList", results);
+		model.put("selectOwnerForm", new SelectOwnerForm());
+		return "adoptions/selectOwner";
+	}
+	
+	@GetMapping("/adoptions/{ownerId}")
+	public String adoptionsOwner(Map<String, Object> model,@PathVariable("ownerId") int ownerId) {
+		List<Adoption> adoptions = this.adoptionService.findByOwnerId(ownerId).stream().collect(Collectors.toList());
+		model.put("adoptions", adoptions);
+		model.put("ownerId", ownerId);
+		return "adoptions/adoptionsOwner";
+	}
+	
+	@GetMapping("/adoptions/{ownerId}/list")
+	public String adoptionsList(Map<String, Object> model,@PathVariable("ownerId") int ownerId) {
 		List<Adoption> adoptions = this.adoptionService.findAdoptions(ownerId).stream().collect(Collectors.toList());
 		model.put("adoptions", adoptions);
 		model.put("ownerId", ownerId);
 		return "adoptions/adoptionList";
 	}
 	
-	@GetMapping(value="/adoption/{ownerId}/{petId}/new")
+	@GetMapping(value="/adoptions/menu")
+	public String adoptionMenu(@Valid @ModelAttribute("owner")Owner owner, BindingResult result
+			, Map<String, Object> model) {
+		model.put("owner", owner);
+		return "adoptions/adoptionMenu";
+	}
+	
+	
+	@GetMapping(value="/adoptions/{ownerId}/{petId}/new")
 	public String initCreationForm(Map<String, Object> model, @PathVariable("ownerId") int ownerId, @PathVariable("petId") int petId) {
 		Pet pet = petService.findPetById(petId);
 		Adoption adoption = new Adoption();
 		adoption.setPet(pet);
 		model.put("adoption", adoption);
+		model.put("ownerId", ownerId);
 		return adoptionForm;
 	}
 	
-	@PostMapping(value="/adoption/{ownerId}/{petId}/new")
+	@PostMapping(value="/adoptions/{ownerId}/{petId}/new")
 	public String processCreationForm(@Valid Adoption adoption, BindingResult result,@PathVariable("ownerId") int ownerId) {
 		if(result.hasErrors()) {
 			return adoptionForm;
@@ -66,46 +96,14 @@ public class AdoptionController {
 		}
 	}
 	
-	@GetMapping("/adoption/{adoptionId}/{ownerId}/delete")
+	@GetMapping("/adoptions/{adoptionId}/{ownerId}/delete")
 	public String deleteAdoption(@PathVariable("adoptionId") int adoptionId, @PathVariable("ownerId") int ownerId, Map<String, Object> model) {
 		this.adoptionService.deleteAdoption(adoptionId);
 		return "redirect:/adoptions/" + ownerId + "/list";
 	}
 	
-	@GetMapping("/adoption")
-	public String selectOwner(Map<String, Object> model) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-		String username;
-		String autoridad="";
-		if(principal instanceof UserDetails) {
-			 autoridad = ((UserDetails)principal).getAuthorities().iterator().next().toString();
-			 username = ((UserDetails)principal).getUsername();
-		}else {
-			 username = principal.toString();
-		}
-		
-		if(autoridad.equals("owner")) {
-			List<Owner> owners = ownerService.findOwnersByUsername(username).stream().collect(Collectors.toList());
-			model.put("owners", owners);
-		}
-		return "adoptions/selectOwner";
-	}
 	
-	@GetMapping("/adoption/menu/{ownerId}")
-	public String menu(Map<String, Object> model,@PathVariable("ownerId") int ownerId) {
-		model.put("ownerId", ownerId);
-		return "adoptions/adoptionMenu";
-	}
-	
-	@GetMapping("/adoption/{ownerId}")
-	public String adoptionsOwner(Map<String, Object> model,@PathVariable("ownerId") int ownerId) {
-		List<Adoption> adoptions = this.adoptionService.findByOwnerId(ownerId).stream().collect(Collectors.toList());
-		model.put("adoptions", adoptions);
-		model.put("ownerId", ownerId);
-		return "adoptions/adoptionsOwner";
-	}
-	
-	@GetMapping("/adoption/{ownerId}/{adoptionId}")
+	@GetMapping("/adoptions/{ownerId}/{adoptionId}")
 	public String adoptionsOwner(Map<String, Object> model,@PathVariable("ownerId") int ownerId,@PathVariable("adoptionId") int adoptionId) {
 		Adoption adoption = this.adoptionService.findById(adoptionId);
 		model.put("adoption", adoption);

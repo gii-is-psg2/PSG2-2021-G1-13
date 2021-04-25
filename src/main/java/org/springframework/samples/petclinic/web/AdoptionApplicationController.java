@@ -25,7 +25,7 @@ public class AdoptionApplicationController {
 	private final AdoptionService adoptionService;
 	private final AdoptionApplicationService adoptionApplicationService;
 	
-	private final String adoptionApplicationForm = "adoptionApplications/form";
+	private final String adoptionApplicationForm = "adoptionApplications/formAdoptionApplication";
 	
 	private final String adoptionApllicationDetails = "adoptionApplications/adoptionApplicationDetails";
 	@Autowired
@@ -35,7 +35,7 @@ public class AdoptionApplicationController {
 		this.adoptionService = adoptionService;
 	}
 	
-	@GetMapping(value="adoptionApplication/new/{ownerId}/{adoptionId}")
+	@GetMapping(value="/adoptionApplication/new/{ownerId}/{adoptionId}")
 	public String initFormAdoptionApplication(@PathVariable("ownerId") int ownerId, @PathVariable("adoptionId") int adoptionId, Map<String, Object> model) {
 		AdoptionApplication adoptionApplication = new AdoptionApplication();
 		Owner owner = this.ownerService.findOwnerById(ownerId);
@@ -47,7 +47,7 @@ public class AdoptionApplicationController {
 		return adoptionApplicationForm;
 	}
 	
-	@PostMapping(value="adoptionApplication/new/{ownerId}/{adoptionId}")
+	@PostMapping(value="/adoptionApplication/new/{ownerId}/{adoptionId}")
 	public String processFormAdoptionApplication(@Valid AdoptionApplication adoptionApplication,@PathVariable("ownerId") int ownerId, @PathVariable("adoptionId") int adoptionId, Map<String, Object> model,BindingResult result) {
 		if(result.hasErrors()) {
 			return adoptionApplicationForm;
@@ -57,14 +57,14 @@ public class AdoptionApplicationController {
 		}
 	}
 	
-	@GetMapping(value="adoptionApplication/{ownerId}/{adoptionApplicationId}")
+	@GetMapping(value="/adoptionApplication/{ownerId}/{adoptionApplicationId}")
 	public String initAdoptionApplicationDetails(@PathVariable("ownerId") int ownerId, @PathVariable("adoptionApplicationId") int adoptionApllicationId, Map<String, Object> model) {
 		AdoptionApplication adoptionApplication = this.adoptionApplicationService.findById(adoptionApllicationId);
 		model.put("ownerId", ownerId);
 		model.put("adoptionApplication", adoptionApplication);
 		return adoptionApllicationDetails;
 	}
-	@PostMapping(value="adoptionApplication/{ownerId}/{adoptionApplicationId}")
+	@PostMapping(value="/adoptionApplication/{ownerId}/{adoptionApplicationId}")
 	public String processAdoptionApplicationDetails(@Valid AdoptionApplication adoptionApplication,@PathVariable("ownerId") int ownerId, @PathVariable("adoptionApplicationId") int adoptionApllicationId, Map<String, Object> model, BindingResult result) {
 		if(result.hasErrors()) {
 			return adoptionApllicationDetails;
