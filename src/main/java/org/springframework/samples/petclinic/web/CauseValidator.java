@@ -1,8 +1,12 @@
 package org.springframework.samples.petclinic.web;
 
 import org.springframework.samples.petclinic.model.Cause;
+import org.springframework.samples.petclinic.model.Donation;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
 @Component
@@ -19,11 +23,11 @@ public class CauseValidator implements Validator {
 		final String organization = cause.getOrganization();
 		
 		// name validation
-		if (name == null) {
+		if (name == null || name.trim().equals("")) {
 			errors.rejectValue("name", CauseValidator.REQUIRED, CauseValidator.REQUIRED);
 		}
 		// description validation
-		if (description == null) {
+		if (description == null || description.trim().equals("")) {
 			errors.rejectValue("description", CauseValidator.REQUIRED, CauseValidator.REQUIRED);
 		}
 		// target validation
@@ -33,9 +37,26 @@ public class CauseValidator implements Validator {
 			errors.rejectValue("target", "invalid_target", "<fmt:message key=\"invalid_target\"/>");
 		}
 		// organization validation
-		if (organization == null) {
+		if (organization == null || organization.trim().equals("")) {
 			errors.rejectValue("organization", CauseValidator.REQUIRED, CauseValidator.REQUIRED);
 		}
+	}
+	
+	public void validateDonation(final Donation donation, final BindingResult result) {
+		final Owner owner = donation.getClient();
+		final Double amount = donation.getAmount();
+		
+		// owner validation
+		if (owner == null) {
+			result.addError(new FieldError("donation", "owner", CauseValidator.REQUIRED));
+		}
+		// amount validation
+		if (amount == null) {
+			result.addError(new FieldError("donation", "amount", CauseValidator.REQUIRED));
+		}else if (amount <= 0) {
+			result.addError(new FieldError("donation", "amount", "Must be positive"));
+		}
+		//"<fmt:message key=\"invalid_amount\"/>"
 	}
 
 	/**

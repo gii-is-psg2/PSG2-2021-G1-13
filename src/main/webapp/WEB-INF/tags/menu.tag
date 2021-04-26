@@ -47,6 +47,12 @@
                     <fmt:message key="reservations"/></span>
                 </petclinic:menuItem>
 
+                <petclinic:menuItem active="${name eq 'causes'}" url="/causes"
+                                    title="causes">
+                    <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
+                    <fmt:message key="causes"/></span>
+                </petclinic:menuItem>
+
 				<petclinic:menuItem active="${name eq 'error'}" url="/oups"
 					title="trigger a RuntimeException to see how it is handled">
 					<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
