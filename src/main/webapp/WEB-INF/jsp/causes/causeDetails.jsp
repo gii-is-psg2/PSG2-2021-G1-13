@@ -51,12 +51,14 @@
         <spring:param name="causeId" value="${cause.id}"/>
     </spring:url>
     <a href="${fn:escapeXml(editUrl)}" class="btn btn-default"><fmt:message key="deleteCause"/></a>
-	
-    <spring:url value="{causeId}/donate" var="addUrl">
-        <spring:param name="causeId" value="${cause.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(addUrl)}" class="btn btn-default"><fmt:message key="newDonation"/></a>
-
+	<c:choose>
+		<c:when test="${open}">
+    		<spring:url value="{causeId}/donate" var="addUrl">
+        		<spring:param name="causeId" value="${cause.id}"/>
+    		</spring:url>
+    		<a href="${fn:escapeXml(addUrl)}" class="btn btn-default"><fmt:message key="newDonation"/></a>
+		</c:when>
+	</c:choose>
     <br/>
     <br/>
     <br/>

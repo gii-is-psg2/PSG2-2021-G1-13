@@ -17,7 +17,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +41,8 @@ public class CauseController {
 
 	@Autowired
 	private CauseValidator causeValidator;
+	
+	private Collection<Owner> owners;
 
 	@InitBinder("cause")
 	public void initCauseBinder(final WebDataBinder dataBinder) {
@@ -44,7 +50,7 @@ public class CauseController {
 	}
 
 	@GetMapping()
-	public String causesList(ModelMap modelMap) {
+	public String causesList(final ModelMap modelMap) {
 		CauseController.log.info("Loading list of causes view");
 		final String view= "causes/causesList";
 		final Iterable<Cause> causes=this.causeService.findAllCauses();
@@ -53,19 +59,19 @@ public class CauseController {
 	}
 
 	@GetMapping(path="/new")
-	public String createCause(ModelMap modelMap) {
+	public String createCause(final ModelMap modelMap) {
 		CauseController.log.info("Loading new cause form");
 		modelMap.addAttribute("cause", new Cause());
-		return CREATE_UPDATE_CAUSE_VIEW;
+		return CauseController.CREATE_UPDATE_CAUSE_VIEW;
 	}
 
 	@PostMapping(path="/new")
-	public String saveCause(@Valid Cause cause, final BindingResult result, ModelMap modelMap) {
+	public String saveCause(@Valid final Cause cause, final BindingResult result, final ModelMap modelMap) {
 		CauseController.log.info("Saving cause: " + cause.getId());
 		if(result.hasErrors()) {
 			CauseController.log.warn("Found errors on insertion: " + result.getAllErrors());
 			modelMap.addAttribute("cause", cause);
-			return CREATE_UPDATE_CAUSE_VIEW;
+			return CauseController.CREATE_UPDATE_CAUSE_VIEW;
 		}else {
 			CauseController.log.info("Cause validated: saving into DB");
 			cause.setDonations(new HashSet<>());
@@ -77,9 +83,9 @@ public class CauseController {
 	}
 
 	@GetMapping(path="/{causeId}/delete")
-	public String deleteCause(@PathVariable("causeId") final int causeId, ModelMap modelMap) {
+	public String deleteCause(@PathVariable("causeId") final int causeId, final ModelMap modelMap) {
 		CauseController.log.info("Deleting cause: " + causeId);
-		String view="causes/causesList";
+		final String view="causes/causesList";
 		final Cause cause = this.causeService.findCauseById(causeId);
 		if(cause!=null) {
 			CauseController.log.info("Cause found: deleting");
@@ -93,23 +99,23 @@ public class CauseController {
 	}
 
 	@GetMapping(value = "/{causeId}/edit")
-	public String initUpdateCauseForm(@PathVariable("causeId") final int causeId, ModelMap model) {
+	public String initUpdateCauseForm(@PathVariable("causeId") final int causeId, final ModelMap model) {
 		CauseController.log.info("Loading update cause form");
 		final Cause cause = this.causeService.findCauseById(causeId);
 		model.put("cause", cause);
-		return CREATE_UPDATE_CAUSE_VIEW;
+		return CauseController.CREATE_UPDATE_CAUSE_VIEW;
 	}
 
 	@PostMapping(value = "/{causeId}/edit")
-	public String processUpdateCauseForm(@Valid Cause cause, BindingResult result,
-			@PathVariable("causeId") int causeId, ModelMap model) {
+	public String processUpdateCauseForm(@Valid final Cause cause, final BindingResult result,
+			@PathVariable("causeId") final int causeId, final ModelMap model) {
 		cause.setId(causeId);
 		cause.setClosed(false);
 		CauseController.log.info("Updating cause: " + causeId);
 		if (result.hasErrors()) {
 			CauseController.log.warn("Found errors on update: " + result.getAllErrors());
 			model.put("cause", cause);
-			return "causes/updateCause";
+			return CauseController.CREATE_UPDATE_CAUSE_VIEW;
 		}
 		else {
 			CauseController.log.info("Cause validated: updating into DB");
@@ -119,19 +125,21 @@ public class CauseController {
 	}
 
 	@GetMapping("/{causeId}")
-	public String causeDetails(@PathVariable("causeId") final int causeId, ModelMap modelmap) {
+	public String causeDetails(@PathVariable("causeId") final int causeId, final ModelMap modelmap) {
 		final String view = "causes/causeDetails";
 		final List<Donation> donations = this.causeService.findDonationsByCause(causeId);
+		final Cause cause = this.causeService.findCauseById(causeId);
 		modelmap.addAttribute("donations", donations);
-		modelmap.addAttribute("cause", this.causeService.findCauseById(causeId));
+		modelmap.addAttribute("cause", cause);
+		modelmap.addAttribute("open", !cause.getClosed());
 		return view;
 	}
 
 	@GetMapping("/{causeId}/donate")
-	public String initCreationDonationForm(@PathVariable("causeId") final int causeId, ModelMap modelmap) {
-		Donation donation = new Donation();
-        Collection<Owner> results = this.ownerService.findOwnerByLastName("");
-        modelmap.addAttribute("ownerList", results);
+	public String initCreationDonationForm(@PathVariable("causeId") final int causeId, final ModelMap modelmap) {
+		final Donation donation = new Donation();
+        this.owners = this.ownerService.findOwnerByLastName("");
+        modelmap.addAttribute("ownerList", this.owners);
 		modelmap.addAttribute("donation", donation);
 		modelmap.addAttribute("causeId", causeId);
 		return CauseController.CREATE_DONATION_VIEW;
@@ -139,12 +147,14 @@ public class CauseController {
 	}
 
 	@PostMapping("/{causeId}/donate")
-	public String processCreateDonationForm(@Valid Donation donation, BindingResult result, @PathVariable("causeId") final int causeId, ModelMap modelmap){
+	public String processCreateDonationForm(final Donation donation, final BindingResult result, @PathVariable("causeId") final int causeId, final ModelMap modelmap){
+		this.causeValidator.validateDonation(donation, result);
 		if(result.hasErrors()) {
+	        modelmap.addAttribute("ownerList", this.owners);
 			modelmap.addAttribute("donation", donation);
 			return CauseController.CREATE_DONATION_VIEW;
 		}else {
-		    Cause cause = this.causeService.findCauseById(causeId);
+		    final Cause cause = this.causeService.findCauseById(causeId);
 		    donation.setCause(cause);
 			donation.setDate(LocalDate.now());
             cause.getDonations().add(donation);
