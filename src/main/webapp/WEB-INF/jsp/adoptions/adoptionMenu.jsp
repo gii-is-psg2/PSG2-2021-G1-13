@@ -6,8 +6,10 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
-<petclinic:layout pageName="adoptions">
+<petclinic:layout pageName="adoption">
     <h2><fmt:message key="adoptionMenu"/></h2>
+    
+    <div class="container text-center">
     
     <spring:url value="/adoptions/{ownerId}/list" var="availableAdoptions">
         <spring:param name="ownerId" value="${ownerId}"/>
@@ -23,4 +25,7 @@
         <spring:param name="ownerId" value="${ownerId}"/>
     </spring:url>
     <a href="${fn:escapeXml(ownPets)}"><fmt:message key="ownPets"/></a>	
+    
+    
+    </div>
 </petclinic:layout>

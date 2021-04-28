@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Adoption;
+import org.springframework.samples.petclinic.model.AdoptionApplication;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.SelectOwnerForm;
@@ -21,6 +23,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,12 +90,20 @@ public class AdoptionController {
 	}
 	
 	@PostMapping(value="/adoptions/{ownerId}/{petId}/new")
-	public String processCreationForm(@Valid Adoption adoption, BindingResult result,@PathVariable("ownerId") int ownerId) {
-		if(result.hasErrors()) {
+	public String processCreationForm(@Valid Adoption adoption, BindingResult result, @PathVariable("ownerId") int ownerId, ModelMap model) {
+		try {
+			if(result.hasErrors()) {
+				return adoptionForm;
+			}else {
+				this.adoptionService.saveAdoption(adoption);
+				return "redirect:/adoptions/" + ownerId + "/list";
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+			model.put("adoption", adoption);
+			model.put("ownerId", ownerId);
+			model.put("error", "duplicatedAdoption");
 			return adoptionForm;
-		}else {
-			this.adoptionService.saveAdoption(adoption);
-			return "redirect:/adoptions/" + ownerId + "/list";
 		}
 	}
 	

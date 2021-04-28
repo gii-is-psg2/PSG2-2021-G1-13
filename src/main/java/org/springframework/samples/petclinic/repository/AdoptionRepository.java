@@ -25,4 +25,5 @@ public interface AdoptionRepository extends Repository<Adoption, Integer>{
 	@Query("SELECT adoption FROM Adoption adoption WHERE adoption.pet.owner.id LIKE :id")
 	Collection<Adoption> findByOwnerId(@Param("id") int id);
 
+
 }

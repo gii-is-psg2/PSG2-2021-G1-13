@@ -8,7 +8,7 @@
 	uri="http://www.springframework.org/security/tags"%>
 <!--  >%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%-->
 
-<petclinic:layout pageName="adoptionApplication">
+<petclinic:layout pageName="adoption">
 
 	
     <h2><fmt:message key="newAdoptionApp"/></h2>

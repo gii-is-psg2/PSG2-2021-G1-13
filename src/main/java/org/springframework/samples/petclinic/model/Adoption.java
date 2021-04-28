@@ -24,7 +24,7 @@ public class Adoption extends BaseEntity{
 	private String description;
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="pet")
+	@JoinColumn(name="pet", unique= true)
 	private Pet pet;
 
 	@OneToMany(mappedBy = "adoption",cascade=CascadeType.ALL)

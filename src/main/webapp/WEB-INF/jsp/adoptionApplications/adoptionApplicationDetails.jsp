@@ -5,7 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
-<petclinic:layout pageName="adoptions">
+<petclinic:layout pageName="adoption">
     <h2><fmt:message key="adoptionAppDetails"/></h2>
 
     <table id="adoptionApplicationTable" class="table table-striped">
@@ -21,7 +21,7 @@
         <c:forEach items="${adoptionApllicationDetails}" var="adoptionApllication">
             <tr>
                 <td> 
-                    <c:out value="${adoptionApllication.owner.user.username}"/> 
+                    <c:out value="${adoptionApllication.owner.firstName} ${adoptionApllication.owner.lastName}"/> 
                 </td>
                 <td> 
                    <c:out value="${adoptionApllication.description}"/> 

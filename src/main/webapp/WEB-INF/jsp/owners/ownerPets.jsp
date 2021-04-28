@@ -6,7 +6,7 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="adoptions">
-    <h2><fmt:message key="owner"/><c:out value="${ownerId}"/>&nbsp<fmt:message key="pet"/></h2>
+    <h2><fmt:message key="owner"/><c:out value="${ownerId}"/>&nbsp&nbsp<fmt:message key="pet"/></h2>
 
     <table id="petTable" class="table table-striped">
         <thead>
@@ -30,11 +30,13 @@
                    <c:out value="${pet.type}"/> 
                 </td> 
 				<td> 
-                    <spring:url value="/adoptions/{ownerId}/{petId}/new" var="adoptionFormUrl">
+				<c:if test="${pet.adoption == null}">
+					<spring:url value="/adoptions/{ownerId}/{petId}/new" var="adoptionFormUrl">
                         <spring:param name="ownerId" value="${ownerId}"/>
                         <spring:param name="petId" value="${pet.id}"/>
                     </spring:url>
-                    <a href="${fn:escapeXml(adoptionFormUrl)}"><c:out value="newAdoption"/></a>
+                    <a href="${fn:escapeXml(adoptionFormUrl)}"><fmt:message key="newAdoption"/></a>
+				</c:if>
                 </td>
                 
             </tr>
