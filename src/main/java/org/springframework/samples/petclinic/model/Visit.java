@@ -15,19 +15,11 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import org.hibernate.annotations.OnDelete;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * Simple JavaBean domain object representing a visit.
@@ -113,7 +105,7 @@ public class Visit extends BaseEntity {
 	public void setPet(Pet pet) {
 		this.pet = pet;
 	}
-	
+
 
 
 }

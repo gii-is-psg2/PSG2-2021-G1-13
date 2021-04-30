@@ -1,7 +1,5 @@
 package org.springframework.samples.petclinic.configuration;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.sql.DataSource;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -40,9 +40,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .antMatchers("/vets/**").hasAnyAuthority("admin")
 				.antMatchers("/visit/**").hasAnyAuthority("admin")
 				.antMatchers("/pets/**").hasAnyAuthority("admin")
-				.antMatchers("/owners/**").hasAnyAuthority("owner","admin")				
+				.antMatchers("/owners/**").hasAnyAuthority("owner","admin")
 				.antMatchers("/hotelreservations").hasAnyAuthority("owner","admin")
 				.antMatchers("/hotelreservations/**").hasAnyAuthority("owner","admin")
+				.antMatchers("/causes").permitAll()
+				.antMatchers("/causes/**").hasAnyAuthority("owner","admin")
 				.antMatchers("/adoptions/**").hasAnyAuthority("owner","admin")
 				.antMatchers("/adoptionApplication/**").hasAnyAuthority("owner","admin")
 				.anyRequest().denyAll()
@@ -72,12 +74,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	      .authoritiesByUsernameQuery(
 	       "select username, authority "
 	        + "from authorities "
-	        + "where username = ?")	      	      
-	      .passwordEncoder(this.passwordEncoder());	
+	        + "where username = ?")
+	      .passwordEncoder(this.passwordEncoder());
 	}
 
 	@Bean
-	public PasswordEncoder passwordEncoder() {	    
+	public PasswordEncoder passwordEncoder() {
 		final PasswordEncoder encoder =  NoOpPasswordEncoder.getInstance();
 	    return encoder;
 	}

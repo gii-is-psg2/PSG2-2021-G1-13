@@ -2,12 +2,9 @@ package org.springframework.samples.petclinic.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
-import org.springframework.boot.web.servlet.error.ErrorController;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -16,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  * It's not ideal, but at least we can use classic MockMvc tests for testing error response + document it.
  */
 @ControllerAdvice
-public class ExceptionHandlerConfiguration 
+public class ExceptionHandlerConfiguration
 {
 	@Autowired
 	private BasicErrorController errorController;

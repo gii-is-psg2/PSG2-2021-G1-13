@@ -15,13 +15,15 @@
  */
 package org.springframework.samples.petclinic.repository;
 
-import java.util.Collection;
-import java.util.List;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
-import org.springframework.samples.petclinic.model.*;
+import org.springframework.samples.petclinic.model.BaseEntity;
+import org.springframework.samples.petclinic.model.Specialty;
+import org.springframework.samples.petclinic.model.Vet;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Repository class for <code>Vet</code> domain objects All method names are compliant

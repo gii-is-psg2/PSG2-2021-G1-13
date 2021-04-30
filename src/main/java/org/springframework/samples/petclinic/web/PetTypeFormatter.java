@@ -15,16 +15,15 @@
  */
 package org.springframework.samples.petclinic.web;
 
-import java.text.ParseException;
-import java.util.Collection;
-import java.util.Locale;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.Formatter;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.service.PetService;
-import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.stereotype.Component;
+
+import java.text.ParseException;
+import java.util.Collection;
+import java.util.Locale;
 
 /**
  * Instructs Spring MVC on how to parse and print elements of type 'PetType'. Starting

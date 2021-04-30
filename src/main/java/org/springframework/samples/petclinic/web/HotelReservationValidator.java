@@ -1,8 +1,5 @@
 package org.springframework.samples.petclinic.web;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.HotelReservation;
 import org.springframework.samples.petclinic.model.Pet;
@@ -11,14 +8,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Component
 public class HotelReservationValidator implements Validator {
-	
+
 	private static final String REQUIRED = "required";
 
 	@Autowired
-	private HotelReservationService hotelReservationService;	
-	
+	private HotelReservationService hotelReservationService;
+
 	public Boolean concurrentDates(final HotelReservation reservation) {
 		final List<HotelReservation> reservations = this.hotelReservationService.findByPet(reservation.getPet());
 		final LocalDate start = reservation.getStart();
@@ -41,7 +41,7 @@ public class HotelReservationValidator implements Validator {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void validate(final Object obj, final Errors errors) {
 		final HotelReservation hotelReservation = (HotelReservation) obj;
@@ -79,5 +79,5 @@ public class HotelReservationValidator implements Validator {
 	public boolean supports(final Class<?> clazz) {
 		return HotelReservation.class.isAssignableFrom(clazz);
 	}
-	
+
 }
