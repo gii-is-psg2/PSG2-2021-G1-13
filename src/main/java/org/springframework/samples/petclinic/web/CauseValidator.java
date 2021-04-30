@@ -70,7 +70,6 @@ public class CauseValidator implements Validator {
 			final Double remaining = target - collected;
 			result.addError(new FieldError("donation", "amount", "Maximum donation for this cause is: " + remaining));
 		}
-		//"<fmt:message key=\"invalid_amount\"/>"
 	}
 
 	/**

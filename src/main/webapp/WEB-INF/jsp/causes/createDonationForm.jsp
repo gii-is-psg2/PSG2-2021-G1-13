@@ -21,7 +21,7 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default"><fmt:message key="addDonation"/></button>
+                <button type="submit" class="btn btn-default" onclick="return confirm('Do you really want to continue?')" ><fmt:message key="addDonation"/></button>
             </div>
         </div>
 
