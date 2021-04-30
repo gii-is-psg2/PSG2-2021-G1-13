@@ -1,18 +1,18 @@
 package org.springframework.samples.petclinic.web;
 
-import java.text.ParseException;
-import java.util.Collection;
-import java.util.Locale;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.Formatter;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.service.HotelReservationService;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
+import java.util.Collection;
+import java.util.Locale;
+
 @Component
 public class PetFormatter implements Formatter<Pet> {
-	
+
 	private final HotelReservationService hotelReservationService;
 
 	@Autowired

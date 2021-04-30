@@ -1,18 +1,12 @@
 package org.springframework.samples.petclinic.model;
 
-import java.time.LocalDate;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -31,7 +25,7 @@ public class Donation extends BaseEntity{
 	@NotNull
 	@Column(name="amount")
 	private Double amount;
-	
+
 	@NotNull
 	@ManyToOne
 	private Owner client;

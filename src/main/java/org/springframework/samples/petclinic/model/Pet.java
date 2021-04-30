@@ -19,23 +19,9 @@ import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import java.util.*;
 
 /**
  * Simple business object representing a pet.
@@ -62,7 +48,7 @@ public class Pet extends NamedEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
 	private Set<Visit> visits;
-	
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet")
 	private Set<HotelReservation> reservations;
 
@@ -111,11 +97,11 @@ public class Pet extends NamedEntity {
 		getVisitsInternal().add(visit);
 		visit.setPet(this);
 	}
-	
+
 	public void deleteOwner() {
 		this.owner = null;
 	}
-	
+
 	public void removeVisit(Visit visit) {
 		visits.remove(visit);
 		visit.setPet(null);

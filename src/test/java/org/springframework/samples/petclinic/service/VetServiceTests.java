@@ -15,8 +15,6 @@
  */
 package org.springframework.samples.petclinic.service;
 
-import java.util.Collection;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +23,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 /**
  * Integration test of the Service and the Repository layer.
@@ -59,10 +59,10 @@ import org.springframework.stereotype.Service;
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 class VetServiceTests {
 
-	
-	
+
+
 	@Autowired
-	protected VetService vetService;	
+	protected VetService vetService;
 
 	@Test
 	void shouldFindVets() {

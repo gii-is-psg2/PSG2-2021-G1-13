@@ -15,8 +15,6 @@
  */
 package org.springframework.samples.petclinic.service;
 
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
@@ -24,6 +22,8 @@ import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
 
 /**
  * Mostly used as a facade for all Petclinic controllers Also a placeholder
@@ -34,18 +34,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OwnerService {
 
-	private final OwnerRepository ownerRepository;	
-	
+	private final OwnerRepository ownerRepository;
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private AuthoritiesService authoritiesService;
 
 	@Autowired
 	public OwnerService(final OwnerRepository ownerRepository) {
 		this.ownerRepository = ownerRepository;
-	}	
+	}
 
 	@Transactional(readOnly = true)
 	public Owner findOwnerById(final int id) throws DataAccessException {
@@ -60,12 +60,12 @@ public class OwnerService {
 	@Transactional
 	public void saveOwner(final Owner owner) throws DataAccessException {
 		//creating owner
-		this.ownerRepository.save(owner);		
+		this.ownerRepository.save(owner);
 		//creating user
 		this.userService.saveUser(owner.getUser());
 		//creating authorities
 		this.authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
-	}		
+	}
 
 	@Transactional
 	public void deleteOwner(final int id) throws DataAccessException{
@@ -75,12 +75,10 @@ public class OwnerService {
 	}
 
 	public User getUser(final String username) {
-		// TODO Auto-generated method stub
 		return this.ownerRepository.getUser(username);
 	}
 
 	public Collection<Owner> findOwnersByUsername(final String username) {
-		// TODO Auto-generated method stub
 		return this.ownerRepository.findOwnersByUsername(username);
 	}
 }
