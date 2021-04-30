@@ -58,4 +58,7 @@
     <sec:authorize access="hasAuthority('admin')">
         <a class="btn btn-default" href='<spring:url value="/causes/new" htmlEscape="true"/>'><fmt:message key="addCause"/></a>
     </sec:authorize>
+    <sec:authorize access="hasAuthority('owner')">
+        <a class="btn btn-default" href='<spring:url value="/causes/new" htmlEscape="true"/>'><fmt:message key="addCause"/></a>
+    </sec:authorize>
 </petclinic:layout>
