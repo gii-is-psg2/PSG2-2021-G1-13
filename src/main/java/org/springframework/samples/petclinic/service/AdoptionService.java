@@ -1,10 +1,15 @@
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.samples.petclinic.model.Adoption;
+import org.springframework.samples.petclinic.model.AdoptionApplication;
+import org.springframework.samples.petclinic.repository.AdoptionApplicationRepository;
 import org.springframework.samples.petclinic.repository.AdoptionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdoptionService {
 	private AdoptionRepository adoptionRepository;
 	
+	private AdoptionApplicationRepository adoptionApplicationRepository;
+	
 	@Autowired
-	public AdoptionService(AdoptionRepository adoptionRepository) {
+	public AdoptionService(AdoptionRepository adoptionRepository, AdoptionApplicationRepository adoptionApplicationRepository) {
 		this.adoptionRepository = adoptionRepository;
+		this.adoptionApplicationRepository = adoptionApplicationRepository;
 	}
 	
 	@Transactional(readOnly = true)
@@ -27,10 +35,17 @@ public class AdoptionService {
 	public void saveAdoption(Adoption adoption) throws DataAccessException {
 		adoptionRepository.save(adoption);
 	}
-	
+
 	@Transactional
-	public void deleteAdoption(int id) throws DataAccessException{
-		adoptionRepository.deleteById(id);
+	public void deleteAdoption(Adoption adoption) throws DataAccessException{
+		
+		List<AdoptionApplication> adoptionApplications = adoption.getAdoptionApplications().stream().collect(Collectors.toList()); 
+		for(AdoptionApplication adoptionApplication : adoptionApplications) {
+			adoption.removeAdoptionApplication(adoptionApplication);
+			this.adoptionApplicationRepository.deleteById(adoptionApplication.getId());
+		}
+		
+		this.adoptionRepository.deleteById(adoption.getId());
 	}
 	
 	@Transactional(readOnly = true)
