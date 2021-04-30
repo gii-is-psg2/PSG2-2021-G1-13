@@ -13,12 +13,12 @@ import org.springframework.validation.Validator;
 
 @Component
 public class HotelReservationValidator implements Validator {
-	
+
 	private static final String REQUIRED = "required";
 
 	@Autowired
-	private HotelReservationService hotelReservationService;	
-	
+	private HotelReservationService hotelReservationService;
+
 	public Boolean concurrentDates(final HotelReservation reservation) {
 		final List<HotelReservation> reservations = this.hotelReservationService.findByPet(reservation.getPet());
 		final LocalDate start = reservation.getStart();
@@ -41,7 +41,7 @@ public class HotelReservationValidator implements Validator {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void validate(final Object obj, final Errors errors) {
 		final HotelReservation hotelReservation = (HotelReservation) obj;
@@ -57,8 +57,10 @@ public class HotelReservationValidator implements Validator {
 		// finish validation
 		if (finish == null) {
 			errors.rejectValue("finish", HotelReservationValidator.REQUIRED, HotelReservationValidator.REQUIRED);
-		}else if(finish.isBefore(start)) {
-			errors.rejectValue("finish", "date_mixup", "<fmt:message key=\\\"date_mixup\\\"/>");
+		}else if(start != null) {
+			if(finish.isBefore(start)) {
+				errors.rejectValue("finish", "date_mixup", "<fmt:message key=\\\"date_mixup\\\"/>");
+			}
 		}
 		// pet validation
 		if (pet == null) {
@@ -79,5 +81,5 @@ public class HotelReservationValidator implements Validator {
 	public boolean supports(final Class<?> clazz) {
 		return HotelReservation.class.isAssignableFrom(clazz);
 	}
-	
+
 }

@@ -1,13 +1,5 @@
 package org.springframework.samples.petclinic.configuration;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.Converter;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +10,20 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
+import java.util.HashSet;
+import java.util.Set;
+
 @Component()
 public final class GenericIdToEntityConverter implements ConditionalGenericConverter {
     private static final Logger log = LoggerFactory.getLogger(GenericIdToEntityConverter.class);
 
     private final ConversionService conversionService=new DefaultConversionService();
-    
+
     @Autowired(required = false)
     private EntityManager entityManager;
 
-        
+
 
     public Set<ConvertiblePair> getConvertibleTypes() {
     	Set<ConvertiblePair> result=new HashSet<ConvertiblePair>();
