@@ -97,4 +97,8 @@ public class PetService {
 		petRepository.deleteById(id);
 	}
 
+	@Transactional(readOnly = true)
+	public Collection<Pet> findByOwnerId(int id){
+		return petRepository.findByOwnerId(id);
+	}
 }

@@ -15,15 +15,19 @@
  */
 package org.springframework.samples.petclinic.repository;
 
+
 import java.util.List;
+import java.util.Collection;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
+
+import java.util.List;
 
 /**
  * Spring Data JPA specialization of the {@link PetRepository} interface
@@ -39,7 +43,7 @@ public interface PetRepository extends Repository<Pet, Integer> {
 	 */
 	@Query("SELECT ptype FROM PetType ptype ORDER BY ptype.name")
 	List<PetType> findPetTypes() throws DataAccessException;
-	
+
 	/**
 	 * Retrieve a <code>Pet</code> from the data store by id.
 	 * @param id the id to search for
@@ -55,6 +59,8 @@ public interface PetRepository extends Repository<Pet, Integer> {
 	 */
 	void save(Pet pet) throws DataAccessException;
 	
+	@Query("SELECT pets FROM Pet pets WHERE pets.owner.id LIKE :id")
+	Collection<Pet> findByOwnerId(@Param("id") int id);
 	
 	void deleteById(int id);
 

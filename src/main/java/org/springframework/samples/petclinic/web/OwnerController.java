@@ -16,15 +16,19 @@
 package org.springframework.samples.petclinic.web;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.AuthoritiesService;
 import org.springframework.samples.petclinic.service.OwnerService;
+import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.samples.petclinic.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -47,9 +51,12 @@ public class OwnerController {
 
 	private final OwnerService ownerService;
 
+	private final PetService petService;
+	
 	@Autowired
-	public OwnerController(OwnerService ownerService, UserService userService, AuthoritiesService authoritiesService) {
+	public OwnerController(OwnerService ownerService, UserService userService, AuthoritiesService authoritiesService, PetService petService) {
 		this.ownerService = ownerService;
+		this.petService = petService;
 	}
 
 	@InitBinder
@@ -146,6 +153,14 @@ public class OwnerController {
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
 		mav.addObject(this.ownerService.findOwnerById(ownerId));
 		return mav;
+	}
+	//Para la vista de los Pets del Owner
+	@GetMapping("/owners/{ownerId}/pets")
+	public String showPetsOwners(@PathVariable("ownerId") int ownerId, Map<String, Object> model) {
+		List<Pet> pets = petService.findByOwnerId(ownerId).stream().collect(Collectors.toList());
+		model.put("pets", pets);
+		model.put("ownerId", ownerId);
+		return "owners/ownerPets";
 	}
 
 }
