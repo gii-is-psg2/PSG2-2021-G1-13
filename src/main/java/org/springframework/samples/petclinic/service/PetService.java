@@ -15,6 +15,8 @@
  */
 package org.springframework.samples.petclinic.service;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Pet;
@@ -27,8 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Collection;
-
 /**
  * Mostly used as a facade for all Petclinic controllers Also a placeholder
  * for @Transactional and @Cacheable annotations
@@ -39,9 +39,9 @@ import java.util.Collection;
 public class PetService {
 
 	private PetRepository petRepository;
-
+	
 	private VisitRepository visitRepository;
-
+	
 
 	@Autowired
 	public PetService(PetRepository petRepository,
@@ -54,7 +54,7 @@ public class PetService {
 	public Collection<PetType> findPetTypes() throws DataAccessException {
 		return petRepository.findPetTypes();
 	}
-
+	
 	@Transactional
 	public void saveVisit(Visit visit) throws DataAccessException {
 		visitRepository.save(visit);
@@ -64,7 +64,7 @@ public class PetService {
 	public Visit findVisitById(int id) throws DataAccessException {
 		return this.visitRepository.findById(id);
 	}
-
+	
 	@Transactional
 	public void deleteVisit(int id,int idPet) throws DataAccessException {
 		Visit visit = this.findVisitById(id);
@@ -72,7 +72,7 @@ public class PetService {
 		pet.removeVisit(visit);
 		this.visitRepository.deleteById(id);
 	}
-
+	
 	@Transactional(readOnly = true)
 	public Pet findPetById(int id) throws DataAccessException {
 		return petRepository.findById(id);
@@ -81,10 +81,10 @@ public class PetService {
 	@Transactional(rollbackFor = DuplicatedPetNameException.class)
 	public void savePet(Pet pet) throws DataAccessException, DuplicatedPetNameException {
 			Pet otherPet=pet.getOwner().getPetwithIdDifferent(pet.getName(), pet.getId());
-            if (StringUtils.hasLength(pet.getName()) &&  (otherPet!= null && otherPet.getId().equals(pet.getId()))) {
+            if (StringUtils.hasLength(pet.getName()) &&  (otherPet!= null && otherPet.getId()!=pet.getId())) {            	
             	throw new DuplicatedPetNameException();
             }else
-                petRepository.save(pet);
+                petRepository.save(pet);                
 	}
 
 
@@ -97,4 +97,8 @@ public class PetService {
 		petRepository.deleteById(id);
 	}
 
+	@Transactional(readOnly = true)
+	public Collection<Pet> findByOwnerId(int id){
+		return petRepository.findByOwnerId(id);
+	}
 }

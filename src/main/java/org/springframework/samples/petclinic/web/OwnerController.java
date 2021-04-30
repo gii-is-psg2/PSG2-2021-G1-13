@@ -15,25 +15,28 @@
  */
 package org.springframework.samples.petclinic.web;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.AuthoritiesService;
 import org.springframework.samples.petclinic.service.OwnerService;
+import org.springframework.samples.petclinic.service.PetService;
+import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.samples.petclinic.service.UserService;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.validation.Valid;
-import java.util.Collection;
-import java.util.Map;
 
 /**
  * @author Juergen Hoeller
@@ -48,9 +51,12 @@ public class OwnerController {
 
 	private final OwnerService ownerService;
 
+	private final PetService petService;
+	
 	@Autowired
-	public OwnerController(OwnerService ownerService, UserService userService, AuthoritiesService authoritiesService) {
+	public OwnerController(OwnerService ownerService, UserService userService, AuthoritiesService authoritiesService, PetService petService) {
 		this.ownerService = ownerService;
+		this.petService = petService;
 	}
 
 	@InitBinder
@@ -59,7 +65,7 @@ public class OwnerController {
 	}
 
 	@GetMapping(value = "/owners/new")
-	public String initCreationForm(Map<String, Object> model, Authentication authentication) {
+	public String initCreationForm(Map<String, Object> model) {
 		Owner owner = new Owner();
 		model.put("owner", owner);
 		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
@@ -73,7 +79,7 @@ public class OwnerController {
 		else {
 			//creating owner, user and authorities
 			this.ownerService.saveOwner(owner);
-
+			
 			return "redirect:/owners/" + owner.getId();
 		}
 	}
@@ -117,7 +123,7 @@ public class OwnerController {
 		model.addAttribute(owner);
 		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 	}
-
+	
 	@PostMapping(value = "/owners/{ownerId}/edit")
 	public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result,
 			@PathVariable("ownerId") int ownerId) {
@@ -130,7 +136,7 @@ public class OwnerController {
 			return "redirect:/owners/{ownerId}";
 		}
 	}
-
+	
 	@GetMapping(value = "/owners/{ownerId}/delete")
 	public String deleteOwner(@PathVariable("ownerId") int ownerId) {
 		this.ownerService.deleteOwner(ownerId);
@@ -147,6 +153,14 @@ public class OwnerController {
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
 		mav.addObject(this.ownerService.findOwnerById(ownerId));
 		return mav;
+	}
+	//Para la vista de los Pets del Owner
+	@GetMapping("/owners/{ownerId}/pets")
+	public String showPetsOwners(@PathVariable("ownerId") int ownerId, Map<String, Object> model) {
+		List<Pet> pets = petService.findByOwnerId(ownerId).stream().collect(Collectors.toList());
+		model.put("pets", pets);
+		model.put("ownerId", ownerId);
+		return "owners/ownerPets";
 	}
 
 }

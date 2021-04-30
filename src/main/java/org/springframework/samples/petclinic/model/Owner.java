@@ -15,14 +15,25 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotEmpty;
+
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.core.style.ToStringCreator;
-
-import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotEmpty;
-import java.util.*;
 
 /**
  * Simple JavaBean domain object representing an owner.
@@ -51,13 +62,16 @@ public class Owner extends Person {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
 	private Set<Pet> pets;
-
+	
 	//
 	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "username", referencedColumnName = "username")
 	private User user;
 	//
-
+	
+	@OneToOne(mappedBy = "owner",cascade=CascadeType.ALL)
+	private AdoptionApplication adoptionApplication;
+	
 	public String getAddress() {
 		return this.address;
 	}
@@ -111,7 +125,7 @@ public class Owner extends Person {
 		getPetsInternal().add(pet);
 		pet.setOwner(this);
 	}
-
+	
 	public boolean removePet(Pet pet) {
 		return getPetsInternal().remove(pet);
 	}
@@ -124,13 +138,13 @@ public class Owner extends Person {
 	public Pet getPet(String name) {
 		return getPet(name, false);
 	}
-
+	
 	public Pet getPetwithIdDifferent(String name,Integer id) {
 		name = name.toLowerCase();
 		for (Pet pet : getPetsInternal()) {
 			String compName = pet.getName();
 			compName = compName.toLowerCase();
-			if (compName.equals(name) && pet.getId().equals(id)) {
+			if (compName.equals(name) && pet.getId()!=id) {
 				return pet;
 			}
 		}
@@ -154,6 +168,15 @@ public class Owner extends Person {
 			}
 		}
 		return null;
+	}
+	
+
+	public AdoptionApplication getAdoptionApplication() {
+		return adoptionApplication;
+	}
+
+	public void setAdoptionApplication(AdoptionApplication adoptionApplication) {
+		this.adoptionApplication = adoptionApplication;
 	}
 
 	@Override

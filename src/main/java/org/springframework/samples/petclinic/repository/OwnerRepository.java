@@ -64,8 +64,7 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
 
 	@Query("SELECT user FROM User user WHERE user.username =:username")
 	public User getUser(@Param("username") String username);
-
-	@Query("SELECT owner FROM Owner owner WHERE owner.user.username = :username")
-	public Collection<Owner> findOwnersByUsername(@Param("username") String username);
-
+	
+	@Query("SELECT owner FROM Owner owner WHERE owner.user.username LIKE :username")
+	public Collection<Owner> findByUsername(@Param("username") String username);
 }
