@@ -69,6 +69,9 @@ public class Owner extends Person {
 	private User user;
 	//
 	
+	@OneToOne(mappedBy = "owner",cascade=CascadeType.ALL)
+	private AdoptionApplication adoptionApplication;
+	
 	public String getAddress() {
 		return this.address;
 	}
@@ -165,6 +168,15 @@ public class Owner extends Person {
 			}
 		}
 		return null;
+	}
+	
+
+	public AdoptionApplication getAdoptionApplication() {
+		return adoptionApplication;
+	}
+
+	public void setAdoptionApplication(AdoptionApplication adoptionApplication) {
+		this.adoptionApplication = adoptionApplication;
 	}
 
 	@Override
