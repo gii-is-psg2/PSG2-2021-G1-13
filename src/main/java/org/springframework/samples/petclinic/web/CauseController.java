@@ -8,11 +8,14 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.model.Authorities;
 import org.springframework.samples.petclinic.model.Cause;
 import org.springframework.samples.petclinic.model.Donation;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.CauseService;
 import org.springframework.samples.petclinic.service.OwnerService;
+import org.springframework.samples.petclinic.util.UserUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -139,6 +142,13 @@ public class CauseController {
 	public String initCreationDonationForm(@PathVariable("causeId") final int causeId, final ModelMap modelmap) {
 		final Donation donation = new Donation();
         this.owners = this.ownerService.findOwnerByLastName("");
+        final String username = UserUtils.getUser();
+        final User user = this.ownerService.getUser(username);
+        for(final Authorities auth: user.getAuthorities()) {
+        	if(auth.getAuthority().equals("owner")) {
+        		this.owners = this.ownerService.findOwnersByUsername(username);
+        	}
+        }
         modelmap.addAttribute("ownerList", this.owners);
 		modelmap.addAttribute("donation", donation);
 		modelmap.addAttribute("causeId", causeId);

@@ -23,7 +23,7 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.repository.OwnerRepository;
+import org.springframework.samples.petclinic.model.User;
 
 /**
  * Spring Data JPA OwnerRepository interface
@@ -61,5 +61,11 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
 	public Owner findById(@Param("id") int id);
 
 	void deleteById(int id);
+	
+	@Query("SELECT user FROM User user WHERE user.username =:username")
+	public User getUser(@Param("username") String username);
+	
+	@Query("SELECT owner FROM Owner owner WHERE owner.user.username = :username")
+	public Collection<Owner> findOwnersByUsername(@Param("username") String username);
 
 }

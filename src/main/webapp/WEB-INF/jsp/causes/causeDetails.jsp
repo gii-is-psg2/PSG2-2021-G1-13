@@ -4,6 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 
 <petclinic:layout pageName="causes">
@@ -42,15 +43,20 @@
         </tr>
     </table>
 
-    <spring:url value="{causeId}/edit" var="editUrl">
-        <spring:param name="causeId" value="${cause.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default"><fmt:message key="editCause"/></a>
+	<sec:authorize access="hasAuthority('admin')">
+    	<spring:url value="{causeId}/edit" var="editUrl">
+        	<spring:param name="causeId" value="${cause.id}"/>
+    	</spring:url>
+    	<a href="${fn:escapeXml(editUrl)}" class="btn btn-default"><fmt:message key="editCause"/></a>
+    </sec:authorize>
 
-	<spring:url value="{causeId}/delete" var="editUrl">
-        <spring:param name="causeId" value="${cause.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default"><fmt:message key="deleteCause"/></a>
+	<sec:authorize access="hasAuthority('admin')">
+		<spring:url value="{causeId}/delete" var="editUrl">
+        	<spring:param name="causeId" value="${cause.id}"/>
+    	</spring:url>
+    	<a href="${fn:escapeXml(editUrl)}" class="btn btn-default"><fmt:message key="deleteCause"/></a>
+    </sec:authorize>
+    
 	<c:choose>
 		<c:when test="${open}">
     		<spring:url value="{causeId}/donate" var="addUrl">
