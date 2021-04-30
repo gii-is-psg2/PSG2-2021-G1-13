@@ -110,7 +110,8 @@ public class AdoptionController {
 	
 	@GetMapping("/adoptions/{adoptionId}/{ownerId}/delete")
 	public String deleteAdoption(@PathVariable("adoptionId") int adoptionId, @PathVariable("ownerId") int ownerId, Map<String, Object> model) {
-		this.adoptionService.deleteAdoption(adoptionId);
+		Adoption adoption = this.adoptionService.findById(adoptionId);
+		this.adoptionService.deleteAdoption(adoption);
 		model.put("message", "La adopción se ha eliminado correctamente.");
 		return adoptionsOwner(model, ownerId);
 	}
