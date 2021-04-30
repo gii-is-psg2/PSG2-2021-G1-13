@@ -19,34 +19,37 @@ public class User{
 	boolean enabled;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-	private Set<Authorities> authorities;
+	Set<Authorities> authorities;
 	
 	public String getUsername() {
-		return username;
+		return this.username;
 	}
 	
-	public void setUsername(String username) {
+	public void setUsername(final String username) {
 		this.username = username;
 	}
 	
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 	
-	public void setPassword(String password) {
+	public void setPassword(final String password) {
 		this.password = password;
 	}
 	
 	public Set<Authorities> getAuthorities() {
-		return authorities;
+		return this.authorities;
 	}
 	
+	public void setAuthorities(final Set<Authorities> authorities) {
+		this.authorities = authorities;
+	}
 
 	public boolean getEnabled() {
-		return enabled;
+		return this.enabled;
 	}
 	
-	public void setEnabled(boolean value) {
+	public void setEnabled(final boolean value) {
 		this.enabled=value;
 	}
 }
