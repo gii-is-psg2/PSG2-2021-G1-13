@@ -54,7 +54,7 @@ public class AdoptionApplicationController {
 	}
 	
 	@PostMapping(value="/adoptionApplication/new")
-	public String processFormAdoptionApplication(@ModelAttribute("adoptionApplication") @Validated AdoptionApplication adoptionApplication, BindingResult result, ModelMap model) {
+	public String processFormAdoptionApplication(@ModelAttribute("adoptionApplication") @Valid AdoptionApplication adoptionApplication, BindingResult result, ModelMap model) {
 		if(result.hasErrors()) {
 			model.put("adoptionApplication", adoptionApplication);
 			return adoptionApplicationForm;
@@ -79,6 +79,7 @@ public class AdoptionApplicationController {
 		AdoptionApplication adoptionApplication = this.adoptionApplicationService.findById(adoptionApllicationId);
 		Adoption adoption = adoptionApplication.getAdoption();
 		adoption.getPet().newOwner(adoptionApplication.getOwner());
+		
 		
 		this.adoptionService.deleteAdoption(adoption);
 		

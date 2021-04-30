@@ -2,6 +2,8 @@ package org.springframework.samples.petclinic.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Collection;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -67,4 +69,9 @@ public class AdoptionApplicationServiceTests {
 		
 	}
 	
+	@Test
+	void shouldFindApplicationsByAdoption() {
+		Collection<AdoptionApplication> adoptionApplication1 = this.adoptionApplicationService.findApplicationsByAdoption(2);
+		assertThat(adoptionApplication1.size()).isEqualTo(1);
+	}
 }
