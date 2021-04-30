@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.web;
 
+import java.util.Set;
+
 import org.springframework.samples.petclinic.model.Cause;
 import org.springframework.samples.petclinic.model.Donation;
 import org.springframework.samples.petclinic.model.Owner;
@@ -45,6 +47,15 @@ public class CauseValidator implements Validator {
 	public void validateDonation(final Donation donation, final BindingResult result) {
 		final Owner owner = donation.getClient();
 		final Double amount = donation.getAmount();
+		final Double target = donation.getCause().getTarget();
+		Double collected = 0.0;
+		if (amount != null) {
+			final Set<Donation> oldDonations = donation.getCause().getDonations();
+			for(final Donation d: oldDonations) {
+				collected += d.getAmount();
+			}
+		}
+		
 		
 		// owner validation
 		if (owner == null) {
@@ -55,6 +66,9 @@ public class CauseValidator implements Validator {
 			result.addError(new FieldError("donation", "amount", CauseValidator.REQUIRED));
 		}else if (amount <= 0) {
 			result.addError(new FieldError("donation", "amount", "Must be positive"));
+		}else if (amount+collected > target) {
+			final Double remaining = target - collected;
+			result.addError(new FieldError("donation", "amount", "Maximum donation for this cause is: " + remaining));
 		}
 		//"<fmt:message key=\"invalid_amount\"/>"
 	}

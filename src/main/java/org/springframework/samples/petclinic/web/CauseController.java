@@ -148,15 +148,15 @@ public class CauseController {
 
 	@PostMapping("/{causeId}/donate")
 	public String processCreateDonationForm(final Donation donation, final BindingResult result, @PathVariable("causeId") final int causeId, final ModelMap modelmap){
+		final Cause cause = this.causeService.findCauseById(causeId);
+		donation.setCause(cause);
+		donation.setDate(LocalDate.now());
 		this.causeValidator.validateDonation(donation, result);
 		if(result.hasErrors()) {
 	        modelmap.addAttribute("ownerList", this.owners);
 			modelmap.addAttribute("donation", donation);
 			return CauseController.CREATE_DONATION_VIEW;
 		}else {
-		    final Cause cause = this.causeService.findCauseById(causeId);
-		    donation.setCause(cause);
-			donation.setDate(LocalDate.now());
             cause.getDonations().add(donation);
 			if (cause.getDonations().stream().mapToDouble(d -> d.getAmount()).sum()>=cause.getTarget())
 			    cause.setClosed(true);
