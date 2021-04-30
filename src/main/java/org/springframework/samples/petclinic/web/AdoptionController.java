@@ -96,7 +96,8 @@ public class AdoptionController {
 				return adoptionForm;
 			}else {
 				this.adoptionService.saveAdoption(adoption);
-				return "redirect:/adoptions/" + ownerId + "/list";
+				model.put("message", "La adopción se ha registrado correctamente.");
+				return adoptionsList(model, ownerId);
 			}
 		}catch (Exception e) {
 			// TODO: handle exception
@@ -110,7 +111,8 @@ public class AdoptionController {
 	@GetMapping("/adoptions/{adoptionId}/{ownerId}/delete")
 	public String deleteAdoption(@PathVariable("adoptionId") int adoptionId, @PathVariable("ownerId") int ownerId, Map<String, Object> model) {
 		this.adoptionService.deleteAdoption(adoptionId);
-		return "redirect:/adoptions/" + ownerId + "/list";
+		model.put("message", "La adopción se ha eliminado correctamente.");
+		return adoptionsOwner(model, ownerId);
 	}
 	
 	

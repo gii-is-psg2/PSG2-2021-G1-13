@@ -58,7 +58,8 @@ public class AdoptionApplicationController {
 			return adoptionApplicationForm;
 		}else {
 			this.adoptionApplicationService.saveAdoptionApplication(adoptionApplication);
-			return "redirect:/";
+			model.put("message", "La solicitud de adopción se ha registrado correctamente.");
+			return "welcome";
 		}
 	}
 	
