@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -17,7 +18,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 public class AdoptionApplication extends BaseEntity{
 	
 	@Column(name="description")
-	@NotEmpty
+	@NotBlank
 	private String description;
 	
 	@Column(name="approved")
@@ -28,7 +29,7 @@ public class AdoptionApplication extends BaseEntity{
 	@JoinColumn(name="adoption")
 	private Adoption adoption;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name="owner")
 	private Owner owner;
 

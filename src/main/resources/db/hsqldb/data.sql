@@ -74,4 +74,4 @@ INSERT INTO adoptions(id,description,pet) VALUES (2,'Allergies in family',6);
 INSERT INTO adoptions(id,description,pet) VALUES (3,'Incompatibility with other pets',2);
 INSERT INTO adoptions(id,description,pet) VALUES (4,'Owner having personal problems',3);
 
-INSERT INTO adoption_applications(id,description,approved,owner,adoption) VALUES (1,'Prueba',false,1,2);
+INSERT INTO adoption_applications(id,description,approved,owner,adoption) VALUES (1,'Prueba',false,2,2);
