@@ -23,7 +23,7 @@ public class Adoption extends BaseEntity{
 	@NotEmpty
 	private String description;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name="pet", unique= true)
 	private Pet pet;
 

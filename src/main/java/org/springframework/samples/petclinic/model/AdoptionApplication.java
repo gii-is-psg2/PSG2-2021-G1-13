@@ -29,7 +29,7 @@ public class AdoptionApplication extends BaseEntity{
 	@JoinColumn(name="adoption")
 	private Adoption adoption;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name="owner")
 	private Owner owner;
 

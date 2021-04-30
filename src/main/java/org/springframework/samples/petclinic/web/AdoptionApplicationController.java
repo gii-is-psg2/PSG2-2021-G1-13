@@ -1,7 +1,9 @@
 package org.springframework.samples.petclinic.web;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -76,8 +78,9 @@ public class AdoptionApplicationController {
 		AdoptionApplication adoptionApplication = this.adoptionApplicationService.findById(adoptionApllicationId);
 		Adoption adoption = adoptionApplication.getAdoption();
 		adoption.getPet().newOwner(adoptionApplication.getOwner());
-		this.adoptionApplicationService.deleteById(adoptionApllicationId);
-		this.adoptionService.deleteAdoption(adoption.getId());
+		
+		this.adoptionService.deleteAdoption(adoption);
+		
 		model.put("ownerId", ownerId);
 		return "/adoptions/adoptionMenu";
 	}

@@ -19,7 +19,7 @@ public interface AdoptionRepository extends Repository<Adoption, Integer>{
 	Collection<Adoption> findAdoptions(@Param("id") int id);
 	
 	@Modifying
-	@Query("DELETE FROM Adoption adoption WHERE adoption.id LIKE :id")
+	@Query("delete from Adoption a where a.id = :id")
 	void deleteById(@Param("id") int id);
 	
 	@Query("SELECT adoption FROM Adoption adoption WHERE adoption.pet.owner.id LIKE :id")
