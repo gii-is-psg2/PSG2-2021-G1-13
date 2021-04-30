@@ -1,14 +1,11 @@
 package org.springframework.samples.petclinic.web;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,14 +13,19 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
 import org.springframework.samples.petclinic.model.Adoption;
+import org.springframework.samples.petclinic.model.Authorities;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.AdoptionService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(controllers=AdoptionController.class,
 excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
@@ -55,77 +57,90 @@ public class AdoptionControllerTest {
 
 	@BeforeEach
 	void setup() {
-		adoption = adoptionService.findById(TEST_ADOPTION_ID);
-		owner = ownerService.findOwnerById(TEST_OWNER_ID);
-		pet = petService.findPetById(TEST_PET_ID);
-		given(this.adoptionService.findById(TEST_ADOPTION_ID)).willReturn(adoption);
-		given(this.ownerService.findOwnerById(TEST_OWNER_ID)).willReturn(owner);
-		given(this.petService.findPetById(TEST_PET_ID)).willReturn(pet);
+		//Hay que preparar un user
+		final User user = new User();
+		user.setUsername("spring");
+		user.setPassword("spring");
+		final Authorities auth = new Authorities();
+		auth.setUser(user);
+		auth.setAuthority("owner");
+		auth.setId(1);
+		final Set<Authorities> auths = new HashSet<Authorities>();
+		auths.add(auth);
+		user.setAuthorities(auths);
+		BDDMockito.given(this.ownerService.getUser(user.getUsername())).willReturn(user);
+		
+		this.adoption = this.adoptionService.findById(AdoptionControllerTest.TEST_ADOPTION_ID);
+		this.owner = this.ownerService.findOwnerById(AdoptionControllerTest.TEST_OWNER_ID);
+		this.pet = this.petService.findPetById(AdoptionControllerTest.TEST_PET_ID);
+		BDDMockito.given(this.adoptionService.findById(AdoptionControllerTest.TEST_ADOPTION_ID)).willReturn(this.adoption);
+		BDDMockito.given(this.ownerService.findOwnerById(AdoptionControllerTest.TEST_OWNER_ID)).willReturn(this.owner);
+		BDDMockito.given(this.petService.findPetById(AdoptionControllerTest.TEST_PET_ID)).willReturn(this.pet);
 	}
 	
 	@WithMockUser(value = "spring")
     @Test
     void testInitCreationForm() throws Exception {
-	mockMvc.perform(get("/adoptions/{ownerId}/{petId}/new", TEST_OWNER_ID, TEST_PET_ID)).andExpect(status().isOk()).andExpect(model().attributeExists("adoption"))
-			.andExpect(view().name("adoptions/formAdoption"));
+	this.mockMvc.perform(MockMvcRequestBuilders.get("/adoptions/{ownerId}/{petId}/new", AdoptionControllerTest.TEST_OWNER_ID, AdoptionControllerTest.TEST_PET_ID)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeExists("adoption"))
+			.andExpect(MockMvcResultMatchers.view().name("adoptions/formAdoption"));
 	}
 	
 	@WithMockUser(value = "spring")
     @Test
     void testSelectOwner() throws Exception {
-	mockMvc.perform(get("/adoptions")).andExpect(status().isOk()).andExpect(model().attributeExists("ownerList"))
-			.andExpect(view().name("adoptions/selectOwner"));
+	this.mockMvc.perform(MockMvcRequestBuilders.get("/adoptions")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeExists("ownerList"))
+			.andExpect(MockMvcResultMatchers.view().name("adoptions/selectOwner"));
 	}
 	
 	@WithMockUser(value = "spring")
     @Test
     void testListOwnerAdoptions() throws Exception {
-	mockMvc.perform(get("/adoptions/{ownerId}", TEST_OWNER_ID)).andExpect(status().isOk()).andExpect(model().attributeExists("adoptions"))
-			.andExpect(view().name("adoptions/adoptionsOwner"));
+	this.mockMvc.perform(MockMvcRequestBuilders.get("/adoptions/{ownerId}", AdoptionControllerTest.TEST_OWNER_ID)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeExists("adoptions"))
+			.andExpect(MockMvcResultMatchers.view().name("adoptions/adoptionsOwner"));
 	}
 	
 	@WithMockUser(value = "spring")
     @Test
     void testListAdoptions() throws Exception {
-	mockMvc.perform(get("/adoptions/{ownerId}/list", TEST_OWNER_ID)).andExpect(status().isOk()).andExpect(model().attributeExists("adoptions"))
-			.andExpect(view().name("adoptions/adoptionList"));
+	this.mockMvc.perform(MockMvcRequestBuilders.get("/adoptions/{ownerId}/list", AdoptionControllerTest.TEST_OWNER_ID)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeExists("adoptions"))
+			.andExpect(MockMvcResultMatchers.view().name("adoptions/adoptionList"));
 	}
 	
 	@WithMockUser(value = "spring")
     @Test
     void testAdoptionMenu() throws Exception {
-	mockMvc.perform(get("/adoptions/{ownerId}/list", TEST_OWNER_ID)).andExpect(status().isOk())
-			.andExpect(view().name("adoptions/adoptionList"));
+	this.mockMvc.perform(MockMvcRequestBuilders.get("/adoptions/{ownerId}/list", AdoptionControllerTest.TEST_OWNER_ID)).andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.view().name("adoptions/adoptionList"));
 	}
 	
 	@WithMockUser(value = "spring")
     @Test
     void testInitSendForm() throws Exception {
-		mockMvc.perform(post("/adoptions/"+TEST_OWNER_ID+"/"+TEST_ADOPTION_ID+"/new")
-				.with(csrf())
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/adoptions/"+AdoptionControllerTest.TEST_OWNER_ID+"/"+AdoptionControllerTest.TEST_ADOPTION_ID+"/new")
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.param("description", "test")
 				.param("pet", "1"))
-	.andExpect(status().isOk())
-	.andExpect(view().name("adoptions/adoptionList"));
+	.andExpect(MockMvcResultMatchers.status().isOk())
+	.andExpect(MockMvcResultMatchers.view().name("adoptions/adoptionList"));
 	}
 	
 	
 	@WithMockUser(value = "spring")
     @Test
     void testInitSendFormError() throws Exception {
-		mockMvc.perform(post("/adoptions/"+TEST_OWNER_ID+"/"+TEST_ADOPTION_ID+"/new")
-				.with(csrf())
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/adoptions/"+AdoptionControllerTest.TEST_OWNER_ID+"/"+AdoptionControllerTest.TEST_ADOPTION_ID+"/new")
+				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.param("pet", "1"))
-	.andExpect(status().isOk())
-	.andExpect(model().attributeHasErrors("adoption"))
-	.andExpect(model().attributeHasFieldErrors("adoption", "description"))
-	.andExpect(view().name("adoptions/formAdoption"));
+	.andExpect(MockMvcResultMatchers.status().isOk())
+	.andExpect(MockMvcResultMatchers.model().attributeHasErrors("adoption"))
+	.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("adoption", "description"))
+	.andExpect(MockMvcResultMatchers.view().name("adoptions/formAdoption"));
 	}
 	
 	@WithMockUser(value = "spring")
     @Test
     void testDeleteAdoption() throws Exception {
-	mockMvc.perform(get("/adoptions/{ownerId}/{petId}/delete", TEST_OWNER_ID, TEST_PET_ID)).andExpect(status().isOk()).andExpect(model().attributeExists("message"))
-			.andExpect(view().name("adoptions/adoptionsOwner"));
+	this.mockMvc.perform(MockMvcRequestBuilders.get("/adoptions/{ownerId}/{petId}/delete", AdoptionControllerTest.TEST_OWNER_ID, AdoptionControllerTest.TEST_PET_ID)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeExists("message"))
+			.andExpect(MockMvcResultMatchers.view().name("adoptions/adoptionsOwner"));
 	}
 }
