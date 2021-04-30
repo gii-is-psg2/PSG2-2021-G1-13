@@ -31,6 +31,11 @@ public class AdoptionService {
 		return adoptionRepository.findAdoptions(id);
 	}
 	
+	@Transactional(readOnly = true)
+	public Collection<Adoption> findAll(){
+		return adoptionRepository.findAll();
+	}
+	
 	@Transactional
 	public void saveAdoption(Adoption adoption) throws DataAccessException {
 		adoptionRepository.save(adoption);

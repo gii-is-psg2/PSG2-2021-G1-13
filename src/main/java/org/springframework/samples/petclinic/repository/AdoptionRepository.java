@@ -12,7 +12,7 @@ import org.springframework.samples.petclinic.model.Adoption;
 public interface AdoptionRepository extends Repository<Adoption, Integer>{
 	
 	void save(Adoption adoption) throws DataAccessException;
-	
+	Collection<Adoption> findAll();
 	Adoption findById(int id);
 	
 	@Query("SELECT adoption FROM Adoption adoption WHERE adoption.pet.owner.id NOT LIKE :id")
@@ -24,6 +24,5 @@ public interface AdoptionRepository extends Repository<Adoption, Integer>{
 	
 	@Query("SELECT adoption FROM Adoption adoption WHERE adoption.pet.owner.id LIKE :id")
 	Collection<Adoption> findByOwnerId(@Param("id") int id);
-
 
 }
