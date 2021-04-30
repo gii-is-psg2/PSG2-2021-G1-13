@@ -14,8 +14,9 @@ public interface AdoptionApplicationRepository extends Repository<AdoptionApplic
 	void save(AdoptionApplication adoptionApplication) throws DataAccessException;
 	
 	AdoptionApplication findById(int id);
-	
-	
+
+	Collection<AdoptionApplication> findAll();
+
 	@Modifying
 	@Query("delete from AdoptionApplication a where a.id = :id")
 	void deleteById(@Param("id") int id);
