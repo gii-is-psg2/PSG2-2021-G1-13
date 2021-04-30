@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.repository;
 
+import java.util.Collection;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.repository.Repository;
 import org.springframework.samples.petclinic.model.AdoptionApplication;
@@ -11,4 +13,6 @@ public interface AdoptionApplicationRepository extends Repository<AdoptionApplic
 	AdoptionApplication findById(int id);
 	
 	void deleteById(int id) throws DataAccessException;
+	
+	Collection<AdoptionApplication> findAll();
 }
