@@ -70,7 +70,7 @@ class AdoptionApplicationControllerTests {
     @Test
     void testApplicationsByAdoption() throws Exception{
 		mockMvc.perform(get("/adoptionApplication/{adoptionId}/{ownerId}", TEST_ADOPTION_ID ,TEST_OWNER_ID)).andExpect(status().isOk())
-		.andExpect(model().attributeExists("ownerId")).andExpect(model().attributeExists("adoptionApllicationDetails"));
+		.andExpect(model().attributeExists("ownerId")).andExpect(model().attributeExists("adoptionApplicationDetails"));
 	}
 
 
