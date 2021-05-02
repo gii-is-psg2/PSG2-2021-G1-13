@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.web;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Specialty;
@@ -37,10 +38,12 @@ import java.util.*;
  * @author Ken Krebs
  * @author Arjen Poutsma
  */
+@Slf4j
 @Controller
 public class VetController {
 
-	private final VetService vetService;
+    public static final String VETS = "redirect:/vets";
+    private final VetService vetService;
     private static final String VIEWS_VET_CREATE_OR_UPDATE_FORM = "vets/createOrUpdateVetForm";
 
     @Autowired
@@ -72,7 +75,7 @@ public class VetController {
 	@GetMapping(value = "/vets/{id}/delete")
 	public String deleteVet(Map<String, Object> model,@PathVariable("id") int id) {
 		this.vetService.deleteVet(id);
-		return "redirect:/vets";
+		return VETS;
 	}
 
     @ModelAttribute("specialties")
@@ -100,19 +103,19 @@ public class VetController {
         else {
             //creating vet
             if (specialties.isPresent()) {
-                String[] spec_list = specialties.get();
-                for (int i = 0; i < spec_list.length; i++) {
-                    String specName = spec_list[i];
+                String[] specList = specialties.get();
+                for (int i = 0; i < specList.length; i++) {
+                    String specName = specList[i];
                     try {
                         vet.addSpecialty(parseSpec(specName));
                     } catch (ParseException e) {
-
+                        VetController.log.error("Error parsing specialities: " + e.getMessage());
                     }
                 }
             }
             this.vetService.saveVet(vet);
 
-            return "redirect:/vets";
+            return VETS;
         }
     }
 
@@ -143,13 +146,13 @@ public class VetController {
             //creating vet
             Set<Specialty> specialtySet = new HashSet<>();
             if (specialties.isPresent()) {
-                String[] spec_list = specialties.get();
-                for (int i = 0; i < spec_list.length; i++) {
-                    String specName = spec_list[i];
+                String[] specList = specialties.get();
+                for (int i = 0; i < specList.length; i++) {
+                    String specName = specList[i];
                     try {
                         specialtySet.add(parseSpec(specName));
                     } catch (ParseException e) {
-
+                        VetController.log.error("Error parsing specialities: " + e.getMessage());
                     }
                 }
             }
@@ -158,7 +161,7 @@ public class VetController {
             vetToUpdate.setSpecialtiesInternal(specialtySet);
             this.vetService.saveVet(vetToUpdate);
 
-            return "redirect:/vets";
+            return VETS;
         }
     }
 

@@ -36,24 +36,24 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 includeFilters= {@ComponentScan.Filter(value = CauseValidator.class, type = FilterType.ASSIGNABLE_TYPE )},
 excludeFilters= @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
 excludeAutoConfiguration= SecurityConfiguration.class)
-public class CauseControllerTests {
-	
+class CauseControllerTests {
+
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@MockBean
 	private CauseService causeService;
-	
+
 	@MockBean
 	private OwnerService ownerService;
-	
+
 	@Mock
 	private User user;
-	
+
 	private Cause cause;
-	
+
 	private Donation donation;
-	
+
 	@BeforeEach
 	void setup() {
 
@@ -68,8 +68,8 @@ public class CauseControllerTests {
 		final Set<Authorities> auths = new HashSet<Authorities>();
 		auths.add(auth);
 		this.user.setAuthorities(auths);
-		
-		
+
+
 		//Hay que preparar un owner
 		final Owner owner = new Owner();
 		owner.setAddress("Calle Piruleta");
@@ -83,7 +83,7 @@ public class CauseControllerTests {
 		BDDMockito.given(this.ownerService.findOwnerByLastName("")).willReturn(owners);
 		BDDMockito.given(this.ownerService.getUser(this.user.getUsername())).willReturn(this.user);
 		BDDMockito.given(this.ownerService.findOwnersByUsername(this.user.getUsername())).willReturn(owners);
-		
+
 		//Hay que preparar donations
 		this.donation = new Donation();
 		this.donation.setAmount(100.0);
@@ -97,7 +97,7 @@ public class CauseControllerTests {
 		BDDMockito.given(this.causeService.findAllDonations()).willReturn(donations_list);
 		BDDMockito.given(this.causeService.findDonationsByCause(1)).willReturn(donations_list);
 		BDDMockito.given(this.causeService.findDonationById(1)).willReturn(this.donation);
-		
+
 		this.cause = new Cause();
 		this.cause.setName("CauseName");
 		this.cause.setClosed(false);
@@ -111,14 +111,14 @@ public class CauseControllerTests {
 		causes.add(this.cause);
 		BDDMockito.given(this.causeService.findAllCauses()).willReturn(causes);
 	}
-	
+
 	@WithMockUser(value = "spring")
 	@Test
 	void testListCause() throws Exception{
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/causes")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeExists("causes"))
 		.andExpect(MockMvcResultMatchers.view().name("causes/causesList"));
 	}
-	
+
 	@WithMockUser(value = "spring")
 	@Test
 	void testCauseDetails() throws Exception {
@@ -131,21 +131,21 @@ public class CauseControllerTests {
 				.andExpect(MockMvcResultMatchers.model().attribute("cause", Matchers.hasProperty("organization", Matchers.is(this.cause.getOrganization()))))
 				.andExpect(MockMvcResultMatchers.view().name("causes/causeDetails"));
 	}
-	
+
 	@WithMockUser(value = "spring")
 	@Test
 	void testInitCreationFormCause() throws Exception{
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/causes/new")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeExists("cause"))
 		.andExpect(MockMvcResultMatchers.view().name("causes/createOrUpdateCauseForm"));
 	}
-	
+
 	@WithMockUser(value = "spring")
 	@Test
 	void testInitCreationFormDonation() throws Exception{
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/causes/{causeId}/donate", 1)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeExists("donation"))
 		.andExpect(MockMvcResultMatchers.view().name("causes/createDonationForm"));
 	}
-	
+
 	@WithMockUser(value = "spring")
     @Test
     void testProcessCreationFormCauseSuccess() throws Exception {
@@ -157,7 +157,7 @@ public class CauseControllerTests {
 			.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 			.andExpect(MockMvcResultMatchers.view().name("redirect:/causes/"));
 	}
-	
+
 	@WithMockUser(value = "spring")
     @Test
     void testProcessCreationFormCauseHasErrors() throws Exception {
@@ -171,7 +171,7 @@ public class CauseControllerTests {
 			.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("cause", "target"))
 			.andExpect(MockMvcResultMatchers.view().name("causes/createOrUpdateCauseForm"));
 	}
-	
+
 	@WithMockUser(value = "spring")
     @Test
     void testProcessCreationFormDonationHasErrors() throws Exception {
@@ -184,7 +184,7 @@ public class CauseControllerTests {
 			.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("donation", "amount"))
 			.andExpect(MockMvcResultMatchers.view().name("causes/createDonationForm"));
 	}
-	
+
 	@WithMockUser(value = "spring")
 	@Test
 	void testInitUpdateFormCause() throws Exception {
@@ -196,7 +196,7 @@ public class CauseControllerTests {
 				.andExpect(MockMvcResultMatchers.model().attribute("cause", Matchers.hasProperty("organization", Matchers.is(this.cause.getOrganization()))))
 				.andExpect(MockMvcResultMatchers.view().name("causes/createOrUpdateCauseForm"));
 	}
-	
+
 	@WithMockUser(value = "spring")
 	@Test
 	void testProcessUpdateFormCauseSuccess() throws Exception {
@@ -209,7 +209,7 @@ public class CauseControllerTests {
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.view().name("redirect:/causes/{causeId}"));
 	}
-	
+
 	@WithMockUser(value = "spring")
 	@Test
 	void testProcessUpdateFormCauseHasErrors() throws Exception {
@@ -223,27 +223,27 @@ public class CauseControllerTests {
 				.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("cause", "name"))
 				.andExpect(MockMvcResultMatchers.view().name("causes/createOrUpdateCauseForm"));
 	}
-	
+
 	@WithMockUser(value = "spring")
 	@Test
 	void testProcessDeleteCauseSuccesful() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/causes/{causeId}/delete", 1))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.view().name("redirect:/causes/"));
-		
+
 		Mockito.verify(this.causeService).deleteCauseById(1);
 	}
-	
+
 	@WithMockUser(value = "spring")
 	@Test
 	void testProcessDeleteCauseHasErrors() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/causes/{causeId}/delete", 2))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 				.andExpect(MockMvcResultMatchers.view().name("redirect:/causes/"));
-		
+
 		Mockito.verify(this.causeService, Mockito.times(0)).deleteCauseById(2);
 	}
-	
-	
+
+
 
 }

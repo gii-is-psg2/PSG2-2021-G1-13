@@ -1,35 +1,25 @@
 package org.springframework.samples.petclinic.model;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PostLoad;
-import javax.persistence.PostPersist;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "adoptions")
 public class Adoption extends BaseEntity{
-	
+
 	@Column(name = "description")
 	@NotEmpty
 	private String description;
-	
+
 	@OneToOne
 	@JoinColumn(name="pet", unique= true)
 	private Pet pet;
 
 	@OneToMany(mappedBy = "adoption",cascade=CascadeType.ALL)
 	private Set<AdoptionApplication> adoptionApplications;
-	
+
 	public String getDescription() {
 		return description;
 	}
@@ -60,17 +50,17 @@ public class Adoption extends BaseEntity{
 		}
 		return this.adoptionApplications;
 	}
-	
+
 	public void addAdoptionApplication(AdoptionApplication adoptionApplication) {
 		getAdoptionApplicationInternal().add(adoptionApplication);
 		adoptionApplication.setAdoption(this);
 	}
-	
+
 	public boolean removeAdoptionApplication(AdoptionApplication adoptionApplication) {
 		return getAdoptionApplicationInternal().remove(adoptionApplication);
 	}
-	
-	
-	
+
+
+
 
 }

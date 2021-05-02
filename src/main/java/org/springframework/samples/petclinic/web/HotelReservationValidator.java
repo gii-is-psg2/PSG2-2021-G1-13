@@ -1,8 +1,5 @@
 package org.springframework.samples.petclinic.web;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.HotelReservation;
 import org.springframework.samples.petclinic.model.Pet;
@@ -10,6 +7,9 @@ import org.springframework.samples.petclinic.service.HotelReservationService;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Component
 public class HotelReservationValidator implements Validator {
@@ -57,20 +57,16 @@ public class HotelReservationValidator implements Validator {
 		// finish validation
 		if (finish == null) {
 			errors.rejectValue("finish", HotelReservationValidator.REQUIRED, HotelReservationValidator.REQUIRED);
-		}else if(start != null) {
-			if(finish.isBefore(start)) {
-				errors.rejectValue("finish", "date_mixup", "<fmt:message key=\\\"date_mixup\\\"/>");
-			}
+		}else if(start != null && finish.isBefore(start)) {
+			errors.rejectValue("finish", "date_mixup", "<fmt:message key=\\\"date_mixup\\\"/>");
 		}
 		// pet validation
 		if (pet == null) {
 			errors.rejectValue("pet", "pet_null", "<fmt:message key=\\\"pet_null\\\"/>");
 		}
 		// other reservations validation
-		if(start != null && finish != null) {
-			if(this.concurrentDates(hotelReservation)) {
-				errors.rejectValue("pet", "concurrent_date", "<fmt:message key=\"concurrent_date\"/>");
-			}
+		if(start != null && finish != null && this.concurrentDates(hotelReservation)) {
+		    errors.rejectValue("pet", "concurrent_date", "<fmt:message key=\"concurrent_date\"/>");
 		}
 	}
 

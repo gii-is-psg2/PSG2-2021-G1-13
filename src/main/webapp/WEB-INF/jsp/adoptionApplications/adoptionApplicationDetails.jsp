@@ -18,27 +18,27 @@
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${adoptionApllicationDetails}" var="adoptionApllication">
+        <c:forEach items="${adoptionApplicationDetails}" var="adoptionApplication">
             <tr>
                 <td> 
-                    <c:out value="${adoptionApllication.owner.firstName} ${adoptionApllication.owner.lastName}"/> 
+                    <c:out value="${adoptionApplication.owner.firstName} ${adoptionApplication.owner.lastName}"/>
                 </td>
                 <td> 
-                   <c:out value="${adoptionApllication.description}"/> 
+                   <c:out value="${adoptionApplication.description}"/>
                 </td> 
                 <td> 
-                   <c:out value="${adoptionApllication.approved}"/> 
+                   <c:out value="${adoptionApplication.approved}"/>
                 </td> 
                  <td>
                 	<spring:url value="/adoptionApplication/{ownerId}/{adoptionApplicationId}/accept" var="accept">
                         <spring:param name="ownerId" value="${ownerId}"/>
-                        <spring:param name="adoptionApplicationId" value="${adoptionApllication.id}"/>
+                        <spring:param name="adoptionApplicationId" value="${adoptionApplication.id}"/>
                     </spring:url>
                     <a href="${fn:escapeXml(accept)}"><fmt:message key="accept"/></a>
                     
                     <spring:url value="/adoptionApplication/{ownerId}/{adoptionApplicationId}/reject" var="reject">
                     	<spring:param name="ownerId" value="${ownerId}"/>
-                        <spring:param name="adoptionApplicationId" value="${adoptionApllication.id}"/>
+                        <spring:param name="adoptionApplicationId" value="${adoptionApplication.id}"/>
                     </spring:url>
                     <a href="${fn:escapeXml(reject)}"><fmt:message key="reject"/></a>
                     
