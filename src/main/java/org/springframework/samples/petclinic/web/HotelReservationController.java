@@ -26,13 +26,15 @@ import java.util.stream.StreamSupport;
 @RequestMapping("/hotelreservations")
 public class HotelReservationController {
 
-	@Autowired
+    public static final String HOTEL_RESERVATION = "hotelReservation";
+    public static final String MESSAGE = "message";
+    @Autowired
 	private HotelReservationService hotelReservationService;
 
 	@Autowired
 	private HotelReservationValidator hotelReservationValidator;
 
-	@InitBinder("hotelReservation")
+	@InitBinder(HOTEL_RESERVATION)
 	public void initHotelReservationBinder(final WebDataBinder dataBinder) {
 		dataBinder.setValidator(this.hotelReservationValidator);
 	}
@@ -60,7 +62,7 @@ public class HotelReservationController {
 	public String createHotelReservation(final ModelMap modelMap) {
 		HotelReservationController.log.info("Loading new hoter reservations form");
 		final String view="hotelreservations/addHotelReservation";
-		modelMap.addAttribute("hotelReservation", new HotelReservation());
+		modelMap.addAttribute(HOTEL_RESERVATION, new HotelReservation());
 		return view;
 	}
 
@@ -69,12 +71,12 @@ public class HotelReservationController {
 		HotelReservationController.log.info("Saving hotel reservation: " + hotelReservation.getId());
 		if(result.hasErrors()) {
 			HotelReservationController.log.warn("Found errors on insertion: " + result.getAllErrors());
-			modelMap.addAttribute("hotelReservation", hotelReservation);
+			modelMap.addAttribute(HOTEL_RESERVATION, hotelReservation);
 			return "hotelreservations/addHotelReservation";
 		}else {
 			HotelReservationController.log.info("Hotel reservation validated: saving into DB");
 			this.hotelReservationService.save(hotelReservation);
-			modelMap.addAttribute("message", "Hotel reservation successfully saved!");
+			modelMap.addAttribute(MESSAGE, "Hotel reservation successfully saved!");
 			return this.hotelReservationsList(modelMap);
 		}
 	}
@@ -86,10 +88,10 @@ public class HotelReservationController {
 		if(hotelReservation.isPresent()) {
 			HotelReservationController.log.info("Hotel reservation found: deleting");
 			this.hotelReservationService.delete(hotelReservation.get());
-			modelMap.addAttribute("message", "Hotel reservation successfully deleted!");
+			modelMap.addAttribute(MESSAGE, "Hotel reservation successfully deleted!");
 		}else {
 			HotelReservationController.log.warn("Hotel reservation not found in DB: " + hotelReservationId);
-			modelMap.addAttribute("message", "Hotel reservation not found!");
+			modelMap.addAttribute(MESSAGE, "Hotel reservation not found!");
 		}
 		return this.hotelReservationsList(modelMap);
 	}
@@ -100,7 +102,7 @@ public class HotelReservationController {
 		Optional<HotelReservation> recovered = this.hotelReservationService.findHotelReservationById(hotelReservationId);
 		if(recovered.isPresent()) {
             final HotelReservation hotelReservation = recovered.get();
-            model.put("hotelReservation", hotelReservation);
+            model.put(HOTEL_RESERVATION, hotelReservation);
             return "hotelreservations/updateHotelReservation";
         }else
             return "redirect:/hotelreservations";
@@ -113,7 +115,7 @@ public class HotelReservationController {
 		HotelReservationController.log.info("Updating hotel reservation: " + hotelReservationId);
 		if (result.hasErrors()) {
 			HotelReservationController.log.warn("Found errors on update: " + result.getAllErrors());
-			model.put("hotelReservation", hotelReservation);
+			model.put(HOTEL_RESERVATION, hotelReservation);
 			return "hotelreservations/updateHotelReservation";
 		}
 		else {

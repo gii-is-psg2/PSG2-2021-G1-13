@@ -15,11 +15,6 @@
  */
 package org.springframework.samples.petclinic.service;
 
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +28,11 @@ import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNam
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Integration test of the Service and the Repository layer.
@@ -92,7 +92,7 @@ class PetServiceTests {
 
 	@Test
 	@Transactional
-	public void shouldInsertPetIntoDatabaseAndGenerateId() {
+	void shouldInsertPetIntoDatabaseAndGenerateId() {
 		Owner owner6 = this.ownerService.findOwnerById(6);
 		final int found = owner6.getPets().size();
 
@@ -120,7 +120,7 @@ class PetServiceTests {
 
 	@Test
 	@Transactional
-	public void shouldThrowExceptionInsertingPetsWithTheSameName() {
+	void shouldThrowExceptionInsertingPetsWithTheSameName() {
 		final Owner owner6 = this.ownerService.findOwnerById(6);
 		final Pet pet = new Pet();
 		pet.setName("wario");
@@ -149,7 +149,7 @@ class PetServiceTests {
 
 	@Test
 	@Transactional
-	public void shouldUpdatePetName() throws Exception {
+	void shouldUpdatePetName() throws Exception {
 		Pet pet7 = this.petService.findPetById(7);
 		final String oldName = pet7.getName();
 
@@ -163,7 +163,7 @@ class PetServiceTests {
 
 	@Test
 	@Transactional
-	public void shouldThrowExceptionUpdatingPetsWithTheSameName() {
+	void shouldThrowExceptionUpdatingPetsWithTheSameName() {
 		final Owner owner6 = this.ownerService.findOwnerById(6);
 		final Pet pet = new Pet();
 		pet.setName("wario");
@@ -196,7 +196,7 @@ class PetServiceTests {
 
 	@Test
 	@Transactional
-	public void shouldAddNewVisitForPet() {
+	void shouldAddNewVisitForPet() {
 		Pet pet7 = this.petService.findPetById(7);
 		final int found = pet7.getVisits().size();
 		final Visit visit = new Visit();
@@ -217,7 +217,7 @@ class PetServiceTests {
 	@Test
 	void shouldFindVisitsByPetId() throws Exception {
 		final Collection<Visit> visits = this.petService.findVisitsByPetId(7);
-		org.assertj.core.api.Assertions.assertThat(visits.size()).isEqualTo(2);
+		org.assertj.core.api.Assertions.assertThat(visits).hasSize(2);
 		final Visit[] visitArr = visits.toArray(new Visit[visits.size()]);
 		org.assertj.core.api.Assertions.assertThat(visitArr[0].getPet()).isNotNull();
 		org.assertj.core.api.Assertions.assertThat(visitArr[0].getDate()).isNotNull();
