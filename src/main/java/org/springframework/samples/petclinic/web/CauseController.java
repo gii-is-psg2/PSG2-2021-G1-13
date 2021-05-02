@@ -160,7 +160,7 @@ public class CauseController {
 			return CauseController.CREATE_DONATION_VIEW;
 		}else {
             cause.getDonations().add(donation);
-			if (cause.getDonations().stream().mapToDouble(d -> d.getAmount()).sum()>=cause.getTarget())
+			if (cause.getDonations().stream().mapToDouble(Donation::getAmount).sum()>=cause.getTarget())
 			    cause.setClosed(true);
             this.causeService.saveCause(cause);
 			return "redirect:/causes/{causeId}";

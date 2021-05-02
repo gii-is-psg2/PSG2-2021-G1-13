@@ -4,7 +4,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserUtils {
-	
+
+    private  UserUtils(){
+
+    }
+
 	public static String getUser() {
 		final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof UserDetails)

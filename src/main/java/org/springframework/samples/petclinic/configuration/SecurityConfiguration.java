@@ -26,7 +26,9 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	@Autowired
+    public static final String ADMIN = "admin";
+    public static final String OWNER = "owner";
+    @Autowired
 	DataSource dataSource;
 
 	@Override
@@ -35,18 +37,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/resources/**","/webjars/**","/h2-console/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/","/oups").permitAll()
 				.antMatchers("/users/new").permitAll()
-				.antMatchers("/admin/**").hasAnyAuthority("admin")
+				.antMatchers("/admin/**").hasAnyAuthority(ADMIN)
 				.antMatchers("/vets").authenticated()
-        .antMatchers("/vets/**").hasAnyAuthority("admin")
-				.antMatchers("/visit/**").hasAnyAuthority("admin")
-				.antMatchers("/pets/**").hasAnyAuthority("admin")
-				.antMatchers("/owners/**").hasAnyAuthority("owner","admin")
-				.antMatchers("/hotelreservations").hasAnyAuthority("owner","admin")
-				.antMatchers("/hotelreservations/**").hasAnyAuthority("owner","admin")
+        .antMatchers("/vets/**").hasAnyAuthority(ADMIN)
+				.antMatchers("/visit/**").hasAnyAuthority(ADMIN)
+				.antMatchers("/pets/**").hasAnyAuthority(ADMIN)
+				.antMatchers("/owners/**").hasAnyAuthority(OWNER, ADMIN)
+				.antMatchers("/hotelreservations").hasAnyAuthority(OWNER, ADMIN)
+				.antMatchers("/hotelreservations/**").hasAnyAuthority(OWNER, ADMIN)
 				.antMatchers("/causes").permitAll()
-				.antMatchers("/causes/**").hasAnyAuthority("owner","admin")
-				.antMatchers("/adoptions/**").hasAnyAuthority("owner","admin")
-				.antMatchers("/adoptionApplication/**").hasAnyAuthority("owner","admin")
+				.antMatchers("/causes/**").hasAnyAuthority(OWNER, ADMIN)
+				.antMatchers("/adoptions/**").hasAnyAuthority(OWNER, ADMIN)
+				.antMatchers("/adoptionApplication/**").hasAnyAuthority(OWNER, ADMIN)
 				.anyRequest().denyAll()
 				.and()
 				 	.formLogin()
@@ -80,8 +82,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		final PasswordEncoder encoder =  NoOpPasswordEncoder.getInstance();
-	    return encoder;
+	    return NoOpPasswordEncoder.getInstance();
 	}
 
 }
