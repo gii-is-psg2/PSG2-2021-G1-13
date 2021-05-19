@@ -84,9 +84,12 @@
     <properties>
 
         <!-- Generic properties -->
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        
+        <maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
 
         <!-- Web dependencies -->
         <webjars-bootstrap.version>3.3.6</webjars-bootstrap.version>
@@ -96,6 +99,10 @@
 
         <jacoco.version>0.8.5</jacoco.version>
         <spring-format.version>0.0.19</spring-format.version>
+        
+  		<sonar.projectKey>gii-is-psg2_PSG2-2021-G1-13</sonar.projectKey>
+  		<sonar.organization>gii-is-psg2</sonar.organization>
+  		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <sonar.projectKey>gii-is-psg2_PSG2-2021-G1-13</sonar.projectKey>
         <sonar.organization>gii-is-psg2</sonar.organization>
@@ -327,6 +334,12 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            
+            <plugin>
+        		<groupId>org.sonarsource.scanner.maven</groupId>
+        		<artifactId>sonar-maven-plugin</artifactId>
+        		<version>3.7.0.1746</version>
+      		</plugin>
         </plugins>
     </build>
 
