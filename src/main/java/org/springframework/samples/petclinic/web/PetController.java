@@ -41,9 +41,10 @@ import java.util.Collection;
 @RequestMapping("/owners/{ownerId}")
 public class PetController {
 
-	private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
+    private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
+    public static final String OWNER_MAIN_PAGE = "redirect:/owners/{ownerId}";
 
-	private final PetService petService;
+    private final PetService petService;
         private final OwnerService ownerService;
 
 	@Autowired
@@ -61,16 +62,6 @@ public class PetController {
 	public Owner findOwner(@PathVariable("ownerId") int ownerId) {
 		return this.ownerService.findOwnerById(ownerId);
 	}
-
-        /*@ModelAttribute("pet")
-	public Pet findPet(@PathVariable("petId") Integer petId) {
-            Pet result=null;
-		if(petId!=null)
-                    result=this.clinicService.findPetById(petId);
-                else
-                    result=new Pet();
-            return result;
-	}*/
 
 	@InitBinder("owner")
 	public void initOwnerBinder(WebDataBinder dataBinder) {
@@ -104,7 +95,7 @@ public class PetController {
                         result.rejectValue("name", "duplicate", "already exists");
                         return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
                     }
-                    return "redirect:/owners/{ownerId}";
+                    return OWNER_MAIN_PAGE;
 		}
 	}
 
@@ -141,7 +132,7 @@ public class PetController {
                         result.rejectValue("name", "duplicate", "already exists");
                         return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
                     }
-			return "redirect:/owners/{ownerId}";
+			return OWNER_MAIN_PAGE;
 		}
 	}
 
@@ -150,13 +141,13 @@ public class PetController {
     	Pet pet = this.petService.findPetById(petId);
     	pet.deleteOwner();
     	this.petService.deletePet(petId);
-    	return "redirect:/owners/{ownerId}";
+    	return OWNER_MAIN_PAGE;
     }
 
 	@GetMapping(value = "/pets/{petId}/{visitId}/delete")
 	public String deleteVisit(@PathVariable("visitId") int visitId,@PathVariable("petId") int petId) {
 		this.petService.deleteVisit(visitId,petId);
-		return "redirect:/owners/{ownerId}";
+		return OWNER_MAIN_PAGE;
 	}
 
 }
