@@ -60,6 +60,11 @@ public class AdoptionController {
 		model.put("adoptions", adoptions);
 		return "adoptions/adoptionsOwner";
 	}
+	
+	@PostMapping("/adoptions")
+	public String adoptionsMessageOwner(@Valid @ModelAttribute("owner") final Owner owner, final BindingResult result, final Map<String, Object> model) {
+		return "redirect:/adoptions/"+owner.getId();
+	}
 
 	@GetMapping("/adoptions/{ownerId}/list")
 	public String adoptionsList(final Map<String, Object> model,@PathVariable(OWNER_ID) final int ownerId) {
