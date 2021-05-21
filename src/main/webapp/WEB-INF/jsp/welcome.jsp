@@ -12,7 +12,7 @@
             <spring:url value="/resources/images/newIndex.jpg" htmlEscape="true" var="petsImage"/>
             <img class="img-responsive" src="${petsImage}"/>
         </div>
-        <a href="<c:url value="?lang=es"/>">Español</a>
+        <a href="<c:url value="?lang=es"/>">EspaÃ±ol</a>
         <a href="<c:url value="?lang=en"/>">English</a>
     </div>
 </petclinic:layout>
