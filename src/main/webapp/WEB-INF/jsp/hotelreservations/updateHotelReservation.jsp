@@ -37,8 +37,8 @@
             <div class="form-group has-feedback">
             	<fmt:message key="start" var="start"/>
             	<fmt:message key="end" var="finish"/>
-                <petclinic:inputField label="${start}" name="start"/>
-                <petclinic:inputField label="${finish}" name="finish"/>
+                <petclinic:inputField label="${start}" name="start" readonly="true"/>
+                <petclinic:inputField label="${finish}" name="finish" readonly="true"/>
                 <div class="control-group">
                 	<fmt:message key="pet" var="pet"/>      
                 	<petclinic:selectField label="${pet}" name="pet" names="${pets}" size="1"/>

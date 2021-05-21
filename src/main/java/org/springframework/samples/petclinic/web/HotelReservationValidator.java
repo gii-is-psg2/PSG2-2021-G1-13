@@ -1,5 +1,8 @@
 package org.springframework.samples.petclinic.web;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.HotelReservation;
 import org.springframework.samples.petclinic.model.Pet;
@@ -7,9 +10,6 @@ import org.springframework.samples.petclinic.service.HotelReservationService;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Component
 public class HotelReservationValidator implements Validator {
