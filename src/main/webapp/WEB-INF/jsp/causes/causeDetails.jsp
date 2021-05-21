@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ page session="false" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -23,7 +25,7 @@
         </tr>
         <tr>
             <th><fmt:message key="target"/></th>
-            <td><c:out value="${cause.target}"/></td>
+            <td><c:out value="${cause.target}€"/></td>
         </tr>
         <tr>
             <th><fmt:message key="organization"/></th>
@@ -85,7 +87,7 @@
                     <c:out value="${donation.date}"/>
                 </td>
                 <td>
-                    <c:out value="${donation.amount}"/>
+                    <c:out value="${donation.amount}€"/>
                 </td>
                 <td>
                     <c:out value="${donation.client.firstName} ${donation.client.lastName}"/>
