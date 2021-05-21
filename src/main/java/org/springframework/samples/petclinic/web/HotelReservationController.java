@@ -1,6 +1,14 @@
 package org.springframework.samples.petclinic.web;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Authorities;
 import org.springframework.samples.petclinic.model.HotelReservation;
@@ -11,15 +19,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
@@ -34,7 +41,7 @@ public class HotelReservationController {
 	@Autowired
 	private HotelReservationValidator hotelReservationValidator;
 
-	@InitBinder(HOTEL_RESERVATION)
+	@InitBinder(HotelReservationController.HOTEL_RESERVATION)
 	public void initHotelReservationBinder(final WebDataBinder dataBinder) {
 		dataBinder.setValidator(this.hotelReservationValidator);
 	}
@@ -62,7 +69,7 @@ public class HotelReservationController {
 	public String createHotelReservation(final ModelMap modelMap) {
 		HotelReservationController.log.info("Loading new hoter reservations form");
 		final String view="hotelreservations/addHotelReservation";
-		modelMap.addAttribute(HOTEL_RESERVATION, new HotelReservation());
+		modelMap.addAttribute(HotelReservationController.HOTEL_RESERVATION, new HotelReservation());
 		return view;
 	}
 
@@ -71,51 +78,51 @@ public class HotelReservationController {
 		HotelReservationController.log.info("Saving hotel reservation: " + hotelReservation.getId());
 		if(result.hasErrors()) {
 			HotelReservationController.log.warn("Found errors on insertion: " + result.getAllErrors());
-			modelMap.addAttribute(HOTEL_RESERVATION, hotelReservation);
+			modelMap.addAttribute(HotelReservationController.HOTEL_RESERVATION, hotelReservation);
 			return "hotelreservations/addHotelReservation";
 		}else {
 			HotelReservationController.log.info("Hotel reservation validated: saving into DB");
 			this.hotelReservationService.save(hotelReservation);
-			modelMap.addAttribute(MESSAGE, "Hotel reservation successfully saved!");
+			modelMap.addAttribute(HotelReservationController.MESSAGE, "Hotel reservation successfully saved!");
 			return this.hotelReservationsList(modelMap);
 		}
 	}
 
 	@GetMapping(path="/delete/{hotelReservationId}")
-	public String deleteDish(@PathVariable("hotelReservationId") final int hotelReservationId, final ModelMap modelMap) {
+	public String deleteReservation(@PathVariable("hotelReservationId") final int hotelReservationId, final ModelMap modelMap) {
 		HotelReservationController.log.info("Deleting hotel reservation: " + hotelReservationId);
 		final Optional<HotelReservation> hotelReservation = this.hotelReservationService.findHotelReservationById(hotelReservationId);
 		if(hotelReservation.isPresent()) {
 			HotelReservationController.log.info("Hotel reservation found: deleting");
 			this.hotelReservationService.delete(hotelReservation.get());
-			modelMap.addAttribute(MESSAGE, "Hotel reservation successfully deleted!");
+			modelMap.addAttribute(HotelReservationController.MESSAGE, "Hotel reservation successfully deleted!");
 		}else {
 			HotelReservationController.log.warn("Hotel reservation not found in DB: " + hotelReservationId);
-			modelMap.addAttribute(MESSAGE, "Hotel reservation not found!");
+			modelMap.addAttribute(HotelReservationController.MESSAGE, "Hotel reservation not found!");
 		}
 		return this.hotelReservationsList(modelMap);
 	}
 
 	@GetMapping(value = "/edit/{hotelReservationId}")
-	public String initUpdateCasTbForm(@PathVariable("hotelReservationId") final int hotelReservationId, final ModelMap model) {
+	public String initUpdateReservationForm(@PathVariable("hotelReservationId") final int hotelReservationId, final ModelMap model) {
 		HotelReservationController.log.info("Loading update hotel reservation form");
-		Optional<HotelReservation> recovered = this.hotelReservationService.findHotelReservationById(hotelReservationId);
+		final Optional<HotelReservation> recovered = this.hotelReservationService.findHotelReservationById(hotelReservationId);
 		if(recovered.isPresent()) {
             final HotelReservation hotelReservation = recovered.get();
-            model.put(HOTEL_RESERVATION, hotelReservation);
+            model.put(HotelReservationController.HOTEL_RESERVATION, hotelReservation);
             return "hotelreservations/updateHotelReservation";
         }else
             return "redirect:/hotelreservations";
 	}
 
 	@PostMapping(value = "/edit/{hotelReservationId}")
-	public String processUpdateCasTbForm(@Valid final HotelReservation hotelReservation, final BindingResult result,
+	public String processUpdateReservationForm(@Valid final HotelReservation hotelReservation, final BindingResult result,
 			@PathVariable("hotelReservationId") final int hotelReservationId, final ModelMap model) {
 		hotelReservation.setId(hotelReservationId);
 		HotelReservationController.log.info("Updating hotel reservation: " + hotelReservationId);
 		if (result.hasErrors()) {
 			HotelReservationController.log.warn("Found errors on update: " + result.getAllErrors());
-			model.put(HOTEL_RESERVATION, hotelReservation);
+			model.put(HotelReservationController.HOTEL_RESERVATION, hotelReservation);
 			return "hotelreservations/updateHotelReservation";
 		}
 		else {
