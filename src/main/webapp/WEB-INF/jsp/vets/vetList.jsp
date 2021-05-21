@@ -51,13 +51,6 @@
         </tbody>
     </table>
 
-    <table class="table-buttons">
-        <tr>
-            <td>
-                <a href="<spring:url value="/vets.xml" htmlEscape="true" />"><fmt:message key="xml"/></a>
-            </td>            
-        </tr>
-    </table>
     <sec:authorize access="hasAuthority('admin')">
         <a class="btn btn-default" href='<spring:url value="/vets/new" htmlEscape="true"/>'><fmt:message key="addVet"/></a>
     </sec:authorize>
