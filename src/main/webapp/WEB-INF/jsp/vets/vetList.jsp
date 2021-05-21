@@ -3,6 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="vets">
@@ -31,25 +32,29 @@
                     <c:if test="${vet.nrOfSpecialties == 0}"><fmt:message key="none"/></c:if>
                 </td>
                 <td>
-
+					<sec:authorize access="hasAuthority('admin')">
                     <spring:url value="/vets/{id}/delete" var="editUrl">
        					<spring:param name="id" value="${vet.id}"/>
     				</spring:url>
     				<a href="${fn:escapeXml(editUrl)}"><fmt:message key="deleteVet"/></a>
-
+					</sec:authorize>
                 </td>
                 <td>
-                
+                	<sec:authorize access="hasAuthority('admin')">
                 	<spring:url value="/vets/{id}/edit" var="editUrl">
                         <spring:param name="id" value="${vet.id}"/>
                     </spring:url>
                     <a href="${fn:escapeXml(editUrl)}"><fmt:message key="editVet"/></a>
-                    
+                    </sec:authorize>
     			</td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
+    
+    
+				
+				
 
     <table class="table-buttons">
         <tr>
