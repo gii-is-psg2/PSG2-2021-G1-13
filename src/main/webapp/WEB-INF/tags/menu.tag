@@ -7,6 +7,10 @@
 <!--  >%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%-->
 <%@ attribute name="name" required="true" rtexprvalue="true"
 	description="Name of the active menu: home, owners, vets or error"%>
+	
+<%
+	String variable = request.getParameter("ownerId");
+%>
 
 <nav class="navbar navbar-default" role="navigation">
 	<div class="container">
@@ -38,31 +42,33 @@
 				<petclinic:menuItem active="${name eq 'vets'}" url="/vets"
 					title="veterinarians">
 					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-					<fmt:message key="veterinarians"/></span>
+					<span><fmt:message key="veterinarians"/></span>
 				</petclinic:menuItem>
 
                 <petclinic:menuItem active="${name eq 'hotelReservations'}" url="/hotelreservations"
                                     title="hotel">
                     <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-                    <fmt:message key="reservations"/></span>
+                    <span><fmt:message key="reservations"/></span>
                 </petclinic:menuItem>
                 
                 <petclinic:menuItem active="${name eq 'adoption'}" url="/adoptions"
                                     title="adoption">
                     <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-                    <fmt:message key="adoption"/></span>
+                    <span><fmt:message key="adoption"/></span>
                 </petclinic:menuItem>
 
                 <petclinic:menuItem active="${name eq 'causes'}" url="/causes"
                                     title="causes">
                     <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
-                    <fmt:message key="causes"/></span>
+                    <span><fmt:message key="causes"/></span>
                 </petclinic:menuItem>
                 
                 <petclinic:menuItem active="${name eq 'adoptionApp'}" url="/adoptionApplication"
                                     title="Adoptions Messages">
                     <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-                    <fmt:message key="adoptionApp"/></span>
+                    <span><fmt:message key="adoptionApp"/>
+                    <c:if test="${not empty numPeticiones}">( <c:out value="${numPeticiones}"/> )</c:if>
+                    </span>
                 </petclinic:menuItem>
 			</ul>
 

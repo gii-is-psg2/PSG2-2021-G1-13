@@ -66,6 +66,7 @@ public class AdoptionApplicationController {
 		adoptionApplication.setAdoption(adoption);
 		adoptionApplication.setApproved(false);
 		model.put("adoptionApplication", adoptionApplication);
+		model.put("numPeticiones", adoptionApplicationService.numAdoptionAppNoAceptadas(ownerId));
 		return adoptionApplicationForm;
 	}
 
@@ -86,6 +87,7 @@ public class AdoptionApplicationController {
 		Collection<AdoptionApplication> adoptionApplicationList = adoptionApplicationService.findApplicationsByAdoption(adoptionId);
 		model.addAttribute("adoptionApplicationDetails", adoptionApplicationList);
 		model.addAttribute(OWNER_ID, ownerId);
+		model.put("numPeticiones", adoptionApplicationService.numAdoptionAppNoAceptadas(ownerId));
 		return adoptionApllicationDetails;
 	}
 
@@ -100,6 +102,7 @@ public class AdoptionApplicationController {
 		this.adoptionService.deleteAdoption(adoption);
 
 		model.put(OWNER_ID, ownerId);
+		model.put("numPeticiones", adoptionApplicationService.numAdoptionAppNoAceptadas(ownerId));
 		return "/adoptions/adoptionMenu";
 	}
 
@@ -107,6 +110,7 @@ public class AdoptionApplicationController {
 	public String rejectAdoptionApplication(@PathVariable("ownerId") int ownerId, @PathVariable("adoptionApplicationId") int adoptionApllicationId, Map<String, Object> model) {
 		this.adoptionApplicationService.deleteById(adoptionApllicationId);
 		model.put(OWNER_ID, ownerId);
+		model.put("numPeticiones", adoptionApplicationService.numAdoptionAppNoAceptadas(ownerId));
 		return "/adoptions/adoptionMenu";
 	}
 }
