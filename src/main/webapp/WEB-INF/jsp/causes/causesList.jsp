@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ page session="false" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -7,7 +9,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <petclinic:layout pageName="causes">
-    <h2>Causes</h2>
+    <h2><fmt:message key="causes"/></h2>
 
     <table id="causesTable" class="table table-striped">
         <thead>
@@ -32,7 +34,7 @@
                     <c:out value="${cause.description}"/>
                 </td>
                 <td>
-                    <c:out value="${cause.target}"/>
+                    <c:out value="${cause.target}€"/>
                 </td>
                 <td>
                     <c:out value="${cause.organization}"/>
