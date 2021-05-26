@@ -8,7 +8,6 @@
 
 <petclinic:layout pageName="adoption">
     <h2><fmt:message key="adoptionMenu"/></h2>
-    
     <div class="container text-center">
     
     <spring:url value="/adoptions/{ownerId}/list" var="availableAdoptions">
