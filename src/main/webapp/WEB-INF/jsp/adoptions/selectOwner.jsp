@@ -13,7 +13,6 @@
         <table id="ownersTable" class="table table-striped">
         <thead>
         <tr>
-        	<th style="width: 20%;"><fmt:message key="username"/></th>
             <th style="width: 20%;"><fmt:message key="firstName"/></th>
             <th style="width: 20%;"><fmt:message key="lastName"/></th>
             <th style="width: 20%"><fmt:message key="telephone"/></th>
@@ -25,9 +24,6 @@
         	<form:form modelAttribute="selectOwnerForm" action="/adoptions/menu" method="get" class="form-horizontal">
 	        <form:input type="hidden" path="owner" value="${owner.id}"/>
 	         <tr>
-                <td>
-                    <c:out value="${owner.user.username}"/>
-                </td>
                 <td>
                     <c:out value="${owner.firstName}"/>
                 </td>
