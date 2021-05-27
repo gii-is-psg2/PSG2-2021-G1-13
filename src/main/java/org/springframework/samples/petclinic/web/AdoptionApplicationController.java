@@ -3,10 +3,14 @@ package org.springframework.samples.petclinic.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Adoption;
 import org.springframework.samples.petclinic.model.AdoptionApplication;
+import org.springframework.samples.petclinic.model.Authorities;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.SelectOwnerForm;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.AdoptionApplicationService;
 import org.springframework.samples.petclinic.service.AdoptionService;
 import org.springframework.samples.petclinic.service.OwnerService;
+import org.springframework.samples.petclinic.util.UserUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -37,6 +41,21 @@ public class AdoptionApplicationController {
 		this.ownerService = ownerService;
 		this.adoptionService = adoptionService;
 	}
+	
+	@GetMapping("/adoptionApplication")
+	public String selectOwner(final ModelMap model) {
+		Collection<Owner> results = this.ownerService.findOwnerByLastName("");
+		final String username = UserUtils.getUser();
+        final User user = this.ownerService.getUser(username);
+        for(final Authorities auth: user.getAuthorities()) {
+        	if(auth.getAuthority().equals("owner")) {
+        		results = this.ownerService.findOwnersByUsername(username);
+        	}
+        }
+		model.put("ownerList", results);
+		model.put("selectOwnerForm", new SelectOwnerForm());
+		return "adoptionApplications/selectOwner";
+	}
 
 	@GetMapping(value="/adoptionApplication/new/{ownerId}/{adoptionId}")
 	public String initFormAdoptionApplication(@PathVariable("ownerId") int ownerId, @PathVariable("adoptionId") int adoptionId, Map<String, Object> model) {
@@ -47,6 +66,7 @@ public class AdoptionApplicationController {
 		adoptionApplication.setAdoption(adoption);
 		adoptionApplication.setApproved(false);
 		model.put("adoptionApplication", adoptionApplication);
+		model.put("numPeticiones", adoptionApplicationService.numAdoptionAppNoAceptadas(ownerId));
 		return adoptionApplicationForm;
 	}
 
@@ -67,6 +87,7 @@ public class AdoptionApplicationController {
 		Collection<AdoptionApplication> adoptionApplicationList = adoptionApplicationService.findApplicationsByAdoption(adoptionId);
 		model.addAttribute("adoptionApplicationDetails", adoptionApplicationList);
 		model.addAttribute(OWNER_ID, ownerId);
+		model.put("numPeticiones", adoptionApplicationService.numAdoptionAppNoAceptadas(ownerId));
 		return adoptionApllicationDetails;
 	}
 
@@ -81,6 +102,7 @@ public class AdoptionApplicationController {
 		this.adoptionService.deleteAdoption(adoption);
 
 		model.put(OWNER_ID, ownerId);
+		model.put("numPeticiones", adoptionApplicationService.numAdoptionAppNoAceptadas(ownerId));
 		return "/adoptions/adoptionMenu";
 	}
 
@@ -88,6 +110,7 @@ public class AdoptionApplicationController {
 	public String rejectAdoptionApplication(@PathVariable("ownerId") int ownerId, @PathVariable("adoptionApplicationId") int adoptionApllicationId, Map<String, Object> model) {
 		this.adoptionApplicationService.deleteById(adoptionApllicationId);
 		model.put(OWNER_ID, ownerId);
+		model.put("numPeticiones", adoptionApplicationService.numAdoptionAppNoAceptadas(ownerId));
 		return "/adoptions/adoptionMenu";
 	}
 }

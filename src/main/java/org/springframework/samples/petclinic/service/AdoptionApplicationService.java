@@ -42,4 +42,9 @@ public class AdoptionApplicationService {
 	public Collection<AdoptionApplication> findApplicationsByAdoption(int id) throws DataAccessException{
 		return this.adoptionApplicationRepository.findApplicationsByAdoption(id);
 	}
+	
+	@Transactional(readOnly = true)
+	public Integer numAdoptionAppNoAceptadas(int ownerId) {
+		return this.adoptionApplicationRepository.numAdoptionAppNoAceptadas(ownerId);
+	}
 }

@@ -6,13 +6,14 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
-<petclinic:layout pageName="adoption">
+<petclinic:layout pageName="adoptionApp">
     <h2><fmt:message key="owner"/></h2>	
     
     
         <table id="ownersTable" class="table table-striped">
         <thead>
         <tr>
+        	<th style="width: 20%;"><fmt:message key="username"/></th>
             <th style="width: 20%;"><fmt:message key="firstName"/></th>
             <th style="width: 20%;"><fmt:message key="lastName"/></th>
             <th style="width: 20%"><fmt:message key="telephone"/></th>
@@ -21,9 +22,12 @@
         </thead>
         <tbody>
         <c:forEach items="${ownerList}" var="owner">
-        	<form:form modelAttribute="selectOwnerForm" action="/adoptions/menu" method="get" class="form-horizontal">
+        	<form:form modelAttribute="selectOwnerForm" action="/adoptions" method="post" class="form-horizontal">
 	        <form:input type="hidden" path="owner" value="${owner.id}"/>
 	         <tr>
+                <td>
+                    <c:out value="${owner.user.username}"/>
+                </td>
                 <td>
                     <c:out value="${owner.firstName}"/>
                 </td>

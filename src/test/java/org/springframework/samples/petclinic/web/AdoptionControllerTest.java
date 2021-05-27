@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
 import org.springframework.samples.petclinic.model.*;
+import org.springframework.samples.petclinic.service.AdoptionApplicationService;
 import org.springframework.samples.petclinic.service.AdoptionService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
@@ -32,11 +33,12 @@ class AdoptionControllerTest {
 	private static final int TEST_OWNER_ID = 1;
 	private static final int TEST_PET_ID = 1;
 
-	@Autowired
-	private AdoptionController adoptionController;
 
 	@MockBean
 	private AdoptionService adoptionService;
+	
+	@MockBean
+	private AdoptionApplicationService adoptionAppService;
 
     @MockBean
 	private OwnerService ownerService;
@@ -72,6 +74,7 @@ class AdoptionControllerTest {
 		BDDMockito.given(this.adoptionService.findById(AdoptionControllerTest.TEST_ADOPTION_ID)).willReturn(this.adoption);
 		BDDMockito.given(this.ownerService.findOwnerById(AdoptionControllerTest.TEST_OWNER_ID)).willReturn(this.owner);
 		BDDMockito.given(this.petService.findPetById(AdoptionControllerTest.TEST_PET_ID)).willReturn(this.pet);
+		BDDMockito.given(this.adoptionAppService.numAdoptionAppNoAceptadas(TEST_OWNER_ID)).willReturn(0);
 	}
 
 	@WithMockUser(value = "spring")

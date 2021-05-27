@@ -2,6 +2,7 @@ package org.springframework.samples.petclinic.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.*;
+import org.springframework.samples.petclinic.service.AdoptionApplicationService;
 import org.springframework.samples.petclinic.service.AdoptionService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
@@ -24,17 +25,17 @@ import java.util.stream.Collectors;
 public class AdoptionController {
     public static final String OWNER_ID = "ownerId";
     private final AdoptionService adoptionService;
-
+    private final AdoptionApplicationService adoptionApplicationService;
 	private final PetService petService;
-
 	private final OwnerService ownerService;
 
 
 	private static final String adoptionForm = "adoptions/formAdoption";
 
 	@Autowired
-	public AdoptionController(final AdoptionService adoptionService, final PetService petService, final OwnerService ownerService) {
+	public AdoptionController(final AdoptionService adoptionService, final PetService petService, final OwnerService ownerService, final AdoptionApplicationService adoptionApplicationService) {
 		this.adoptionService = adoptionService;
+		this.adoptionApplicationService = adoptionApplicationService;
 		this.petService = petService;
 		this.ownerService = ownerService;
 	}
@@ -58,7 +59,13 @@ public class AdoptionController {
 	public String adoptionsOwner(final Map<String, Object> model,@PathVariable(OWNER_ID) final int ownerId) {
 		final List<Adoption> adoptions = this.adoptionService.findByOwnerId(ownerId).stream().collect(Collectors.toList());
 		model.put("adoptions", adoptions);
+		model.put("numPeticiones", adoptionApplicationService.numAdoptionAppNoAceptadas(ownerId));
 		return "adoptions/adoptionsOwner";
+	}
+	
+	@PostMapping("/adoptions")
+	public String adoptionsMessageOwner(@Valid @ModelAttribute("owner") final Owner owner, final BindingResult result, final Map<String, Object> model) {
+		return "redirect:/adoptions/"+owner.getId();
 	}
 
 	@GetMapping("/adoptions/{ownerId}/list")
@@ -66,6 +73,7 @@ public class AdoptionController {
 		final List<Adoption> adoptions = this.adoptionService.findAdoptions(ownerId).stream().collect(Collectors.toList());
 		model.put("adoptions", adoptions);
 		model.put(OWNER_ID, ownerId);
+		model.put("numPeticiones", adoptionApplicationService.numAdoptionAppNoAceptadas(ownerId));
 		return "adoptions/adoptionList";
 	}
 
@@ -73,6 +81,7 @@ public class AdoptionController {
 	public String adoptionMenu(@Valid @ModelAttribute("owner") final Owner owner, final BindingResult result
 			, final Map<String, Object> model) {
 		model.put(OWNER_ID, owner.getId());
+		model.put("numPeticiones", adoptionApplicationService.numAdoptionAppNoAceptadas(owner.getId()));
 		return "adoptions/adoptionMenu";
 	}
 
@@ -84,6 +93,7 @@ public class AdoptionController {
 		adoption.setPet(pet);
 		model.put("adoption", adoption);
 		model.put(OWNER_ID, ownerId);
+		model.put("numPeticiones", adoptionApplicationService.numAdoptionAppNoAceptadas(ownerId));
 		return this.adoptionForm;
 	}
 
@@ -101,6 +111,7 @@ public class AdoptionController {
 			model.put("adoption", adoption);
 			model.put(OWNER_ID, ownerId);
 			model.put("error", "duplicatedAdoption");
+			model.put("numPeticiones", adoptionApplicationService.numAdoptionAppNoAceptadas(ownerId));
 			return this.adoptionForm;
 		}
 	}
