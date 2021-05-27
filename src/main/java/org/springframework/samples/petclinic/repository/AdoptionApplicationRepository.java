@@ -24,6 +24,6 @@ public interface AdoptionApplicationRepository extends Repository<AdoptionApplic
 	@Query("SELECT a FROM AdoptionApplication a WHERE adoption.id LIKE :id")
 	Collection<AdoptionApplication> findApplicationsByAdoption(@Param("id") int id);
 	
-	@Query("SELECT COUNT(a) FROM AdoptionApplication a WHERE approved = false AND owner.id = :ownerId")
+	@Query("SELECT COUNT(a) FROM AdoptionApplication a WHERE approved = false AND adoption.pet.owner.id = :ownerId")
 	int numAdoptionAppNoAceptadas(@Param("ownerId") int ownerId);
 }
