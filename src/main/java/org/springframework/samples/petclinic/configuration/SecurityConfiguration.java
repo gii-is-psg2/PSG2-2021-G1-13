@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.configuration;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.sql.DataSource;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -38,18 +38,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/","/oups").permitAll()
 				.antMatchers("/actuator/**").permitAll()
 				.antMatchers("/users/new").permitAll()
-				.antMatchers("/admin/**").hasAnyAuthority(ADMIN)
+				.antMatchers("/admin/**").hasAnyAuthority(SecurityConfiguration.ADMIN)
 				.antMatchers("/vets").authenticated()
-        .antMatchers("/vets/**").hasAnyAuthority(ADMIN)
-				.antMatchers("/visit/**").hasAnyAuthority(ADMIN)
-				.antMatchers("/pets/**").hasAnyAuthority(ADMIN)
-				.antMatchers("/owners/**").hasAnyAuthority(OWNER, ADMIN)
-				.antMatchers("/hotelreservations").hasAnyAuthority(OWNER, ADMIN)
-				.antMatchers("/hotelreservations/**").hasAnyAuthority(OWNER, ADMIN)
+        .antMatchers("/vets/**").hasAnyAuthority(SecurityConfiguration.ADMIN)
+				.antMatchers("/visit/**").hasAnyAuthority(SecurityConfiguration.ADMIN)
+				.antMatchers("/pets/**").hasAnyAuthority(SecurityConfiguration.ADMIN)
+				.antMatchers("/owners/**").hasAnyAuthority(SecurityConfiguration.OWNER, SecurityConfiguration.ADMIN)
+				.antMatchers("/hotelreservations").hasAnyAuthority(SecurityConfiguration.OWNER, SecurityConfiguration.ADMIN)
+				.antMatchers("/hotelreservations/**").hasAnyAuthority(SecurityConfiguration.OWNER, SecurityConfiguration.ADMIN)
+				.antMatchers("/itop/**").permitAll()
 				.antMatchers("/causes").permitAll()
-				.antMatchers("/causes/**").hasAnyAuthority(OWNER, ADMIN)
-				.antMatchers("/adoptions/**").hasAnyAuthority(OWNER, ADMIN)
-				.antMatchers("/adoptionApplication/**").hasAnyAuthority(OWNER, ADMIN)
+				.antMatchers("/causes/**").hasAnyAuthority(SecurityConfiguration.OWNER, SecurityConfiguration.ADMIN)
+				.antMatchers("/adoptions/**").hasAnyAuthority(SecurityConfiguration.OWNER, SecurityConfiguration.ADMIN)
+				.antMatchers("/adoptionApplication/**").hasAnyAuthority(SecurityConfiguration.OWNER, SecurityConfiguration.ADMIN)
 				.anyRequest().denyAll()
 				.and()
 				 	.formLogin()
